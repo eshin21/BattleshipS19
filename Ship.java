@@ -1,3 +1,7 @@
+/////////////////////////////
+// Enumerates ship shape, health, weapons, explosions.
+////////////////////////////
+
 public class Ship{
 	
 	int x;

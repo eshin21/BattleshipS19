@@ -1,3 +1,7 @@
+/////////////////////////////
+//Highlights squares depending on mouse movement. 
+////////////////////////////
+
 public class Grid{
 	int width;
 	int height;
