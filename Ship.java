@@ -9,6 +9,7 @@ public class Ship{
 	int length;
 	int health;
 	Color color;
+	Cell start;
 	
 	public Ship(int x, int y,  int length, int health, Color color){
 		this.x = x;
