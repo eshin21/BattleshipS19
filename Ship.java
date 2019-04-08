@@ -6,15 +6,18 @@ public class Ship{
 	
 	int x;
 	int y;
-	String shape;
+	int length;
 	int health;
-	public Ship(int x, int y,  String shape, int health){
+	Color color;
+	
+	public Ship(int x, int y,  int length, int health, Color color){
 		this.x = x;
 		this.y = y;
-		this.shape = shape;
-		this.health =health;
-		
+		this.length = length;
+		this.health = health;
+		this.color = color;		
 	}
+	
 	
 	
 }
