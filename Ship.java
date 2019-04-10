@@ -2,7 +2,7 @@
 // Enumerates ship shape, health, weapons, explosions.
 ////////////////////////////
 
-public class Ship{
+public interface Ship{
 	
 	int x;
 	int y;
@@ -19,7 +19,13 @@ public class Ship{
 		this.color = color;		
 	}
 	
-	//testing
+	
+	
+	
+}
+
+class Schooner implements Ship{
+	
 	
 	
 	
