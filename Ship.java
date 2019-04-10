@@ -1,8 +1,10 @@
+import java.awt.Color;
+
 /////////////////////////////
 // Enumerates ship shape, health, weapons, explosions.
 ////////////////////////////
 
-public interface Ship{
+public class Ship{
 	
 	int x;
 	int y;
@@ -24,10 +26,3 @@ public interface Ship{
 	
 }
 
-class Schooner implements Ship{
-	
-	
-	
-	
-	
-}
