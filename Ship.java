@@ -19,6 +19,9 @@ public class Ship{
 		this.color = color;		
 	}
 	
+	//testing
+	
+	
 	
 	
 }
