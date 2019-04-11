@@ -1,22 +1,44 @@
 import java.awt.Color;
 
 /////////////////////////////
-// Enumerates ship shape, health, weapons, explosions.
+// Enumerates ship.
 ////////////////////////////
+
+class Pair{
+    public double x;
+    public double y;
+    public Pair(double initX, double initY){
+    	x = initX;
+    	y = initY;
+        }
+    
+    public Pair add(Pair toAdd){
+    	return new Pair(x + toAdd.x, y + toAdd.y);
+
+    }
+    
+    public void flipX(){
+    	x = -x;
+    }
+    
+    public void flipY(){
+    	y = -y;
+    }
+}
 
 public class Ship{
 	
-	int x;
-	int y;
+
+	Pair position;
 	int length;
 	int health;
 	Color color;
 	Cell start;
 	int player; //denotes which player this ship belongs to 
 	
-	public Ship(int x, int y,  int length, int health, Color color, int player){
-		this.x = x;
-		this.y = y;
+	public Ship(Pair p, int length, int health, Color color, int player){
+
+		this.position = p;
 		this.length = length;
 		this.health = health;
 		this.color = color;		
