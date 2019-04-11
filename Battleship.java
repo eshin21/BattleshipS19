@@ -7,4 +7,12 @@ public class Battleship{
 		
   }
   
+  
+  class World{
+	  
+	  private Ship[] armada_A; 
+		private Ship[] armada_B;
+	  
+	  
+  }
 }

@@ -11,8 +11,7 @@ import java.awt.event.KeyEvent;
 
 public class Game{
 	
-	private Ship[] armada_A;
-	private Ship[] armada_B;
+
 	public int moveCount;
 	public int shipsPlacedA; //keeps track of whether player A has placed all ships
 	public int shipsPlacedB; //keeps track of whether player B has placed all ships
@@ -22,8 +21,6 @@ public class Game{
 	
 	public Game() {
 		
-		this.armada_A = new Ship[];
-		this.armada_B = new Ship[];
 		this.moveCount = 0;
 		this.shipsPlacedA = 0;
 		this.shipsPlacedB = 0;
@@ -91,6 +88,7 @@ public class Game{
 		
 		MouseInput userIn = new MouseInput();
 		
+		if(mouse)
 		//left off here
 		
 	}
@@ -101,7 +99,7 @@ public class Game{
 }
 	
 
-class MouseInput extends JPanel implements MouseListener{
+class MouseShips extends JPanel implements MouseListener{
     	public static final int WIDTH = 1024;
     	public static final int HEIGHT = 768;
     	public static final int FPS = 60;
