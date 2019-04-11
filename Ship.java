@@ -42,9 +42,14 @@ public class Ship{
 		this.length = length;
 		this.health = health;
 		this.color = color;		
-		this.player = player
+		this.player = player;
 	}
 	
+	public void changePosition(Pair p) {
+		this.position.x = p.x;
+		this.position.y = p.y;
+		
+	}
 	
 	
 	

@@ -27,8 +27,24 @@ public class Game{
 	}
 
 	public void play() {
+<<<<<<< HEAD
 
 
+=======
+		
+		Pair begin = new Pair(0,0);
+
+		
+		world.armada_A = new Ship[5];
+		world.armada_B = new Ship[5];
+		
+		for(int i = 0; i<=4; ++i) {
+			world.armada_A[i] = new Ship(begin, 2+i, 2+i, Color.BLUE, 0);
+			world.armada_B[i] = new Ship(begin, 2+i, 2+i, Color.RED, 0);
+	
+		}
+		
+>>>>>>> 9099df196bd555612231859c339cb332a0b3e370
 		while(moveCount <= 1 & armada_A.length() != 5 & armada_B.length() != 5) {
 			placeShip();
 
@@ -75,10 +91,14 @@ public class Game{
 
 
 	public void placeShip() {
+<<<<<<< HEAD
 
 		MouseInput userIn = new MouseInput();
 
 		if(mouse)
+=======
+				
+>>>>>>> 9099df196bd555612231859c339cb332a0b3e370
 		//left off here
 
 	}
@@ -91,12 +111,16 @@ class MouseShips extends JPanel implements MouseListener{
     	public static final int WIDTH = 1024;
     	public static final int HEIGHT = 768;
     	public static final int FPS = 60;
+<<<<<<< HEAD
     	World world;
 
+=======
+    
+>>>>>>> 9099df196bd555612231859c339cb332a0b3e370
     class Runner implements Runnable{
     		public void run(){
     			while(true){
-    				world.updateSpheres(1.0 / (double)FPS);
+    				Battleship.world.updateShips(1.0 / (double)FPS);
     				repaint();
     				try{
     					Thread.sleep(1000/FPS);
@@ -112,6 +136,7 @@ class MouseShips extends JPanel implements MouseListener{
     	int x = e.getX();
     	int y = e.getY();
     	place = new Pair(x,y);
+
     	return place;
     }
 
