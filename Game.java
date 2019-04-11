@@ -10,72 +10,52 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
 public class Game{
-	
-
 	public int moveCount;
 	public int shipsPlacedA; //keeps track of whether player A has placed all ships
 	public int shipsPlacedB; //keeps track of whether player B has placed all ships
 	public boolean gameOver; //need to keep track of when game stops
 	public int playerA_status;
 	public int playerB_status;
-	
+
 	public Game() {
-		
 		this.moveCount = 0;
 		this.shipsPlacedA = 0;
 		this.shipsPlacedB = 0;
 		this.gameOver = false;
 		this.playerA_status = 0;
 		this.playerB_status = 0;
-		
-		
 	}
-	
-	public void play() {
-		
-		Pair begin = new Pair(0,0);
 
-		
-		world.armada_A = new Ship[5];
-		world.armada_B = new Ship[5];
-		
-		for(int i = 0; i<=4; ++i) {
-			world.armada_A[i] = new Ship(begin, 2+i, 2+i, Color.BLUE, 0);
-			world.armada_B[i] = new Ship(begin, 2+i, 2+i, Color.RED, 0);
-	
-		}
-		
+	public void play() {
+
+
 		while(moveCount <= 1 & armada_A.length() != 5 & armada_B.length() != 5) {
 			placeShip();
-			
+
 		}
 		if(moveCount % 2 == 0 & this.gameOverStatus == false) {
 			System.out.println("It's Player 1's turn.");
-			
-		
+
+
 		}
-		
+
 		else if(moveCount % 2 == 1 & this.gameOverStatus == false) {
 			System.out.println("It's Player 2's turn.");
-		
-		
+
+
 		}
-		
-		else { 
+
+		else {
 			System.out.println("Game over!");
 			if(playerA_status > 0)
 				System.out.print(" Player one wins!");
 			else if (playerB_status > 0)
 				System.out.print(" Player two wins!");
 		}
-	
-		
-		
+
 	}
-		
+
 	public boolean gameOverStatus() {
-		
-		
 			if(this.armada_A.length() == 0) {
 				playerA_status = 0;
 				gameOver = false;
@@ -84,14 +64,15 @@ public class Game{
 				playerB_status = 0;
 				gameOver=false;
 			}
-				
+
 			else {
 				gameOver = true;
 			}
-			
+
 			return gameOver;
 
 	}
+<<<<<<< HEAD
 	
 	
 	public void placeShip() {
@@ -105,16 +86,29 @@ public class Game{
 	}
 	
 	
+=======
+>>>>>>> branch 'master' of https://github.com/eshin21/BattleshipS19.git
 
-	
-}
-	
+
+	public void placeShip() {
+
+		MouseInput userIn = new MouseInput();
+
+		if(mouse)
+		//left off here
+
+	}
+
+
+} //Game
+
 
 class MouseShips extends JPanel implements MouseListener{
     	public static final int WIDTH = 1024;
     	public static final int HEIGHT = 768;
     	public static final int FPS = 60;
-    
+    	World world;
+
     class Runner implements Runnable{
     		public void run(){
     			while(true){
@@ -127,18 +121,15 @@ class MouseShips extends JPanel implements MouseListener{
     			}
 
     		}
-    
+
     }
-    
+
     public Pair mouseClicked(MouseEvent e) {
-    	
     	int x = e.getX();
     	int y = e.getY();
     	place = new Pair(x,y);
 
     	return place;
     }
-    
+
 }
-    
-	
