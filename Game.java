@@ -9,6 +9,7 @@ import java.util.Random;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
+
 public class Game{
 	public int moveCount;
 	public int shipsPlacedA; //keeps track of whether player A has placed all ships
