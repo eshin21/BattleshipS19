@@ -29,7 +29,7 @@ class World{
     int height;
     int width;
 
-		public int[] grid;
+		public int[] positionGrid;
 		public Ship[] armada_A;
 	 	public Ship[] armada_B;
 		Game game;
