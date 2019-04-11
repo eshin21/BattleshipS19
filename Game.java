@@ -85,31 +85,51 @@ public class Game{
 			return gameOver;
 
 	}
+	
+	
+	public void placeShip() {
+		
+		MouseInput userIn = new MouseInput();
+		
+		//left off here
+		
+	}
+	
+	
 
 	
 }
 	
 
 class MouseInput extends JPanel implements MouseListener{
-    public static final int WIDTH = 1024;
-    public static final int HEIGHT = 768;
-    public static final int FPS = 60;
-    World world;
-    Pair newAccel = new Pair(0,0);
+    	public static final int WIDTH = 1024;
+    	public static final int HEIGHT = 768;
+    	public static final int FPS = 60;
+    	World world;
     
     class Runner implements Runnable{
-	public void run()
-	{
-	    while(true){
-		world.updateSpheres(1.0 / (double)FPS);
-		repaint();
-		try{
-		    Thread.sleep(1000/FPS);
-		}
-		catch(InterruptedException e){}
-	    }
+    		public void run(){
+    			while(true){
+    				world.updateSpheres(1.0 / (double)FPS);
+    				repaint();
+    				try{
+    					Thread.sleep(1000/FPS);
+    				}
+    				catch(InterruptedException e){}
+    			}
 
-	}
+    		}
     
     }
+    
+    public Pair mouseClicked(MouseEvent e) {
+    	
+    	int x = e.getX();
+    	int y = e.getY();
+    	place = new Pair(x,y);
+    	return place;
+    }
+    
+}
+    
 	
