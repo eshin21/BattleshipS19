@@ -45,6 +45,11 @@ public class Ship{
 		this.player = player
 	}
 	
+	public void changePosition(Pair p) {
+		this.position.x = p.x;
+		this.position.y = p.y;
+		
+	}
 	
 	
 	
