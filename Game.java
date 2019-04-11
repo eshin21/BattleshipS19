@@ -30,7 +30,18 @@ public class Game{
 	public void play() {
 
 
-		while(moveCount <= 1 & armada_A.length() != 5 & armada_B.length() != 5) {
+		Battleship.world.armada_A = new Ship[5];
+		Battleship.world.armada_B = new Ship[5];
+		Pair p = new Pair(0,0);
+		Color color;
+		
+		
+		for(int i = 0; i<=4; ++i) {
+			armada_A[i] = new Ship(p, i+2, i+2, color.BLUE, 0);
+			armada_B[i] = new Ship(p, i+2, i+2, color.RED, 1);
+		}
+		
+		while(moveCount <= 1) {
 			placeShip();
 
 		}
