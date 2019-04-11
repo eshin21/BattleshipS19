@@ -110,7 +110,7 @@ class MouseShips extends JPanel implements MouseListener{
     public Pair mouseClicked(MouseEvent e) {
     	int x = e.getX();
     	int y = e.getY();
-    	place = new Pair(x,y);
+    	place = new Pair(x,y); 
 
     	return place;
     }
