@@ -8,7 +8,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
 
-public class Battleship{
+public class Battleship extends JPanel{
 	World world;
 	public static final int WIDTH = 1024;
   public static final int HEIGHT = 768;
@@ -16,7 +16,13 @@ public class Battleship{
 
 	public static void main(String[] args){
 		world = new World(WIDTH, HEIGHT);
+		JFrame frame = new JFrame("B A T T L E S H I P");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setContentPane(new World());
+		frame.pack();
+		frame.setVisible(true);
 	}
+
 } //Battleship
 
 class World{
@@ -25,24 +31,32 @@ class World{
 
 		public Ship[] armada_A;
 	 	public Ship[] armada_B;
+		Game game;
 
     public World(int initWidth, int initHeight){
 			width = initWidth;
 			height = initHeight;
+			game = new Game();
+			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
     }
 
-    public void drawArmada(Graphics g){
+    public void drawGrid(int startX, int startY, Graphics g){
 			int row = 10;
 			int column = 10;
+			int rowX = startX;
+			int rowY = startY;
+			int columnX = startX;
+			int columnY = startY;
 
 			for (int r=0; r<row; r++){
-
+				rowX += 45;
+				rowY += 45;
+				g.fillRect(rowX,rowY,450,5);
 			}
 			for (int c=0; c<column; c++){
-
-			}
-			for (int i = 0; i < 5; i++){
-			    armada_A[i].draw(g);
+				columnX += 45;
+				columnY += 45;
+				g.fillRect(columnX,columnY,5,450);
 			}
     }
 
