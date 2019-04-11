@@ -72,6 +72,22 @@ public class Game{
 			return gameOver;
 
 	}
+<<<<<<< HEAD
+	
+	
+	public void placeShip() {
+				
+		//left off here
+		
+		//spit out an x y when clicked
+		//pass that x y into world update so that the update method can draw the ships
+		
+		
+	}
+	
+	
+=======
+>>>>>>> branch 'master' of https://github.com/eshin21/BattleshipS19.git
 
 
 	public void placeShip() {
