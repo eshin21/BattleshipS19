@@ -84,23 +84,6 @@ public class Game{
 		
 		
 	}
-	
-	
-=======
->>>>>>> branch 'master' of https://github.com/eshin21/BattleshipS19.git
-
-
-	public void placeShip() {
-
-		MouseInput userIn = new MouseInput();
-
-		if(mouse)
-		//left off here
-
-	}
-
-
-} //Game
 
 
 class MouseShips extends JPanel implements MouseListener{
