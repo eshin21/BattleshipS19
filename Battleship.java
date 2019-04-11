@@ -29,6 +29,7 @@ class World{
     int height;
     int width;
 
+		public int[] grid;
 		public Ship[] armada_A;
 	 	public Ship[] armada_B;
 		Game game;
@@ -63,5 +64,14 @@ class World{
     public void updateArmada(double time){
 			for (int i = 0; i < numSpheres; i++)
 			    spheres[i].update(this, time);
+		}
+
+		public void paintComponent(Graphics g) {
+			g.setColor(Color.BLACK); //background
+			g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
+
+			//draw player 1 and 2's grids
+			drawGrid(g,25,25);
+			drawGrid(g,520,25);
 		}
 }
