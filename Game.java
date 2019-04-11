@@ -22,42 +22,66 @@ public class Game{
 	
 	public Game() {
 		
-		this.grid = new Ship[];
+		this.armada_A = new Ship[];
+		this.armada_B = new Ship[];
 		this.moveCount = 0;
+		this.shipsPlacedA = 0;
+		this.shipsPlacedB = 0;
+		this.gameOver = false;
+		this.playerA_status = 0;
+		this.playerB_status = 0;
+		
 		
 	}
 	
 	public void play() {
 		
 		
-		if(moveCount % 2 == 0 & this.checkGameStatus == true) {
+		if(moveCount % 2 == 0 & this.gameOverStatus == false) {
 			System.out.println("It's Player 1's turn.");
 			
+		
 		}
 		
-		else if(moveCount &2 == 1 & this.checkGameStatus == true) {
+		else if(moveCount % 2 == 1 & this.gameOverStatus == false) {
 			System.out.println("It's Player 2's turn.");
+		
+		
 		}
-		else 
-			System.out.println("Game over!")
 		
-		
-		
-		
-	public boolean checkGameStatus();
-		
-		if(this.armada_A.length() > 0 & this.armada_B.length() > 0){
-			gameOver = false;
-			if(this.armada_A.length() == 0)
-				playerA_status = 0;
-			else if(this.armada_B.length() == 0)
-				playerB_status = 0;
-			
-				
+		else { 
+			System.out.println("Game over!");
+			if(playerA_status > 0)
+				System.out.print(" Player one wins!");
+			else if (playerB_status > 0)
+				System.out.print(" Player two wins!");
 		}
-		else 
-			gameOver = true;
+	
+		
 		
 	}
+		
+	public boolean gameOverStatus() {
+		
+		
+			if(this.armada_A.length() == 0) {
+				playerA_status = 0;
+				gameOver = false;
+			}
+			else if(this.armada_B.length() == 0) {
+				playerB_status = 0;
+				gameOver=false;
+			}
+				
+			else {
+				gameOver = true;
+			}
+			
+			return gameOver;
+
+	}
+
 	
 }
+	
+	
