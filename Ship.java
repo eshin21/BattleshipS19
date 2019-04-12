@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Graphics;
 
 /////////////////////////////
 // Enumerates ship.
@@ -27,6 +28,12 @@ public class Ship{
 
 	}
 
+	public void draw(Graphics g){
+    	Color c = g.getColor();
+    	g.setColor(color);
+ ///   	g.drawSquare((int)(position.x - radius), (int)(position.y - radius), (int)(2*radius), (int)(2*radius));
+    //	g.setColor(c);
+    }
 
 
 }
