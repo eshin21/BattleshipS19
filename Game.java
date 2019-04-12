@@ -140,6 +140,7 @@ class MouseShips extends JPanel implements MouseListener{
     public void addNotify() {
         super.addNotify();
         requestFocus();
+        
     }
     
   

@@ -33,6 +33,7 @@ public class Ship{
     	g.setColor(color);
  ///   	g.drawSquare((int)(position.x - radius), (int)(position.y - radius), (int)(2*radius), (int)(2*radius));
     //	g.setColor(c);
+    	
     }
 
 
