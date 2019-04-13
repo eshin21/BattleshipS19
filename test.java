@@ -17,7 +17,7 @@ public class Test extends JPanel{
 
 
 	public static void main (String[] args){
-		JFrame frame = new JFrame("DrawToScreen");
+		JFrame frame = new JFrame("Test Window");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(new Test());
 		frame.pack();
