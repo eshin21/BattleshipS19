@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 public class Test extends JPanel{
 	public static final int BOX_WIDTH = 1024;
 	public static final int BOX_HEIGHT = 768;
+	public Pair[][] positionGrid;
 
 	public Test(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
@@ -38,6 +39,7 @@ public class Test extends JPanel{
 				g.setColor(Color.WHITE);
 				g.fillRect(rowX,rowY,450,5);
 				rowY += 45;
+				Pair columnRange = new Pair(rowX-45,rowY);
 			}
 
 			for (int c=0; c<=column; c++){
@@ -48,6 +50,7 @@ public class Test extends JPanel{
 				g.setColor(Color.WHITE);
 				g.fillRect(columnX,columnY,5,450);
 				columnX += 45;
+				Pair columnRange = new Pair(rowX-45,rowY);
 			}
 
 		}

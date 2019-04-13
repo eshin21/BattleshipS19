@@ -29,7 +29,7 @@ class World{
     int height;
     int width;
 
-		public int[] positionGrid;
+		public Pair[][] positionGrid;
 		public Ship[] armada_A;
 	 	public Ship[] armada_B;
 		Game game;
@@ -50,13 +50,15 @@ class World{
 			int columnY = startY;
 
 			for (int r=0; r<row; r++){
-				//create x and y pairs to set equal to index in int array
+				//create x and y pairs to set equal to index in 2D Pair array
+				Pair rowRange = new Pair(rowX,rowX+45);
 				rowX += 45;
 				rowY += 45;
 				g.fillRect(rowX,rowY,450,5);
 			}
 			for (int c=0; c<column; c++){
-				//create x and y pairs to set equal to index in int array
+				//create x and y pairs to set equal to index in Pair array
+				Pair columnRange = new Pair(rowX,rowY+45);
 				columnX += 45;
 				columnY += 45;
 				g.fillRect(columnX,columnY,5,450);
