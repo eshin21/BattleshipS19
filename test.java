@@ -82,6 +82,42 @@ public class Test extends JPanel{
 
 	}
 
+	@Override
+	 public void mouseClicked(MouseEvent e) {
+
+	  if(e.getButton() == 1){
+
+		 this.point = new Pair(e.getX(), e.getY());
+		  System.out.println("You clicked "  + this.point);
+	   this.repaint();
+	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
+	  }
+
+	 }
+
+	 @Override
+	 public void mouseEntered(MouseEvent e) {
+	  // TODO Auto-generated method stub
+
+	 }
+
+	 @Override
+	 public void mouseExited(MouseEvent e) {
+	  // TODO Auto-generated method stub
+
+	 }
+
+	 @Override
+	 public void mousePressed(MouseEvent e) {
+	  // TODO Auto-generated method stub
+
+	 }
+
+	 @Override
+	 public void mouseReleased(MouseEvent e) {
+	  // TODO Auto-generated method stub
+
+	 }
 
 	@Override
 	public void paintComponent(Graphics g) {
