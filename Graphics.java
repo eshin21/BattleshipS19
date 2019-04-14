@@ -1,3 +1,0 @@
-/////////////////////////////
-// Draws/paints ship changes and gameplay (calls Ship for explosions and shooting)
-////////////////////////////
