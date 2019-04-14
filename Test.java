@@ -35,13 +35,9 @@ public void draw(Graphics g, int startX, int startY){
 			int columnX = startX;
 			int columnY = startY;
 
-<<<<<<< HEAD
 			positionGrid = new CoordinateRange[row][column];
 			fillPositionGrid(startX,startY,row,column);
 
-=======
-			this.addMouseListener(this);
->>>>>>> 12507162e4988db7e44f7e8fb67a521bd65ead79
 			for (int r=0; r<=row; r++){
 				g.setColor(Color.WHITE);
 				g.fillRect(rowX,rowY,450,5);
@@ -59,7 +55,7 @@ public void draw(Graphics g, int startX, int startY){
 				columnX += 45;
 				Pair columnRange = new Pair(rowX-45,rowY);
 			}
-			
+
 		}
 
 		public void fillPositionGrid(int startX, int startY, int row, int column){
@@ -89,6 +85,30 @@ public void draw(Graphics g, int startX, int startY){
 
 		}
 
+		public Pair findPoint (Pair point){
+			double x = point.x;
+			double y = point.y;
+			int beginX;
+			int endX;
+			int beginY;
+			int endY;
+			Pair cornerPoint = new Pair(0,0);
+
+			for (int i=0;i<10;i++){
+				for (int j=0;j<10;j++){
+					beginX = (int)positionGrid[i][j].xcoord.x;
+					endX = (int)positionGrid[i][j].xcoord.y;
+					beginY = (int)positionGrid[i][j].ycoord.x;
+					endY = (int)positionGrid[i][j].ycoord.y;
+					if (x >= beginX && x <= endX){
+						if (y >= beginY && y <= endY)
+							cornerPoint = new Pair(beginX,beginY);
+					}
+				}
+			}
+			return cornerPoint;
+		}
+
 	@Override
 	 public void mouseClicked(MouseEvent e) {
 
@@ -96,23 +116,14 @@ public void draw(Graphics g, int startX, int startY){
 
 		 	this.point = new Pair(e.getX(), e.getY());
 		  System.out.println("You clicked "  + this.point);
-<<<<<<< HEAD
 	   	this.repaint();
-=======
-		  
-	   this.repaint();
->>>>>>> 12507162e4988db7e44f7e8fb67a521bd65ead79
 	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
 	  }
 
 	 }
 
 	 @Override
-<<<<<<< HEAD
 	 	public void mouseEntered(MouseEvent e){
-=======
-	 public void mouseEntered(MouseEvent e) {
->>>>>>> 12507162e4988db7e44f7e8fb67a521bd65ead79
 	  // TODO Auto-generated method stub
 
 	 }
@@ -142,68 +153,37 @@ public void draw(Graphics g, int startX, int startY){
 
 		draw(g,25,25);
 		draw(g,520,25);
-		
-<<<<<<< HEAD
-if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
-			
+
+		if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
+
 			int adj = (int) this.point.x % 25;
-			
-			
-			
+
+
+
 			Pair sq = new Pair(this.point.x, this.point.y);
-			
+
 			Pair a = this.point;
 			g.setColor(Color.RED);
-			g.fillRect((int)a.x, (int)a.y, 45, 45);
-			
+			Pair corner = findPoint(point,g);
+			g.fillRect((int)corner.x, (int)corner.y, 45, 45);
+
 		}
-		
+
 		if(this.point != null && this.point.x >= 520 && this.point.y <= 475) {
-			
+
 			int adj = (int) this.point.x % 25;
-			
-			
-			
+
+
+
 			Pair sq = new Pair(this.point.x, this.point.y);
-			
+
 			Pair a = this.point;
 			g.setColor(Color.BLUE);
 			g.fillRect((int)a.x, (int)a.y, 45, 45);
-			
+
 		}
 
 
-=======
-		if(this.point.x >= 25 && this.point.y <= 475) {
-			
-			int adj = (int) this.point.x % 25;
-			
-			
-			
-			Pair sq = new Pair(this.point.x, this.point.y);
-			
-			Pair a = this.point;
-			g.setColor(Color.RED);
-			g.fillRect((int)a.x, (int)a.y, 45, 45);
-			
-		}
-		
-		if(this.point.x >= 520 && this.point.y <= 475) {
-			
-			int adj = (int) this.point.x % 25;
-			
-			
-			
-			Pair sq = new Pair(this.point.x, this.point.y);
-			
-			Pair a = this.point;
-			g.setColor(Color.BLUE);
-			g.fillRect((int)a.x, (int)a.y, 45, 45);
-			
-		}
-
-		
->>>>>>> branch 'master' of https://github.com/eshin21/BattleshipS19.git
 	}
 
 }
