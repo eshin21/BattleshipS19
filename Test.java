@@ -10,7 +10,7 @@ import java.awt.event.*;
 public class Test extends JPanel implements MouseListener{
 	public static final int BOX_WIDTH = 1024;
 	public static final int BOX_HEIGHT = 768;
-	public Pair[][] positionGrid;
+	public CoordinateRange[][] positionGrid;
 	public static Pair point;
 
 	public Test(){
@@ -36,6 +36,8 @@ public static void main (String[] args){
 			int columnX = startX;
 			int columnY = startY;
 
+			positionGrid = new CoordinateRange[row][column];
+			fillPositionGrid(startX,startY,row,column);
 
 			for (int r=0; r<=row; r++){
 				g.setColor(Color.WHITE);
@@ -56,21 +58,49 @@ public static void main (String[] args){
 			}
 
 		}
-	
+
+		public void fillPositionGrid(int startX, int startY, int row, int column){
+			double beginX = startX;
+			double beginY = startY;
+			double endX = startX+50;
+			double endY = startY+50;
+			Pair xcoord = new Pair(beginX,endX);
+			Pair ycoord = new Pair(beginY,endY);
+			CoordinateRange range = new CoordinateRange(xcoord,ycoord);
+
+			for (int i=0;i<row;i++){
+				for (int j=0;j<column;j++){
+					System.out.println(range);
+					positionGrid[i][j] = range;
+					beginX += 50;
+					endX = beginX + 50;
+					range.xcoord = new Pair(beginX,endX);
+				}
+				beginX = startX;
+				endX = beginX + 50;
+				range.xcoord = new Pair(beginX,endX);
+				beginY += 50;
+				endY = beginY + 50;
+				range.ycoord = new Pair(beginY,endY);
+			}
+
+		}
+
 	@Override
 	 public void mouseClicked(MouseEvent e) {
-		
+
 	  if(e.getButton() == 1){
-		
-		 this.point = new Pair(e.getX(), e.getY());
+
+		 	this.point = new Pair(e.getX(), e.getY());
 		  System.out.println("You clicked "  + this.point);
-	   this.repaint();
+	   	this.repaint();
 	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
 	  }
 
 	 }
 
 	 @Override
+	 	public void mouseEntered(MouseEvent e){
 	  // TODO Auto-generated method stub
 
 	 }
@@ -92,8 +122,6 @@ public static void main (String[] args){
 	  // TODO Auto-generated method stub
 
 	 }
-
-
 
 	@Override
 	public void paintComponent(Graphics g) {
