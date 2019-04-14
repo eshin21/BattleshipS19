@@ -27,8 +27,7 @@ public static void main (String[] args){
 	}
 
 
-
-	public void draw(Graphics g, int startX, int startY){
+public void draw(Graphics g, int startX, int startY){
 			int row = 10;
 			int column = 10;
 			int rowX = startX;
@@ -36,9 +35,13 @@ public static void main (String[] args){
 			int columnX = startX;
 			int columnY = startY;
 
+<<<<<<< HEAD
 			positionGrid = new CoordinateRange[row][column];
 			fillPositionGrid(startX,startY,row,column);
 
+=======
+			this.addMouseListener(this);
+>>>>>>> 12507162e4988db7e44f7e8fb67a521bd65ead79
 			for (int r=0; r<=row; r++){
 				g.setColor(Color.WHITE);
 				g.fillRect(rowX,rowY,450,5);
@@ -56,7 +59,7 @@ public static void main (String[] args){
 				columnX += 45;
 				Pair columnRange = new Pair(rowX-45,rowY);
 			}
-
+			
 		}
 
 		public void fillPositionGrid(int startX, int startY, int row, int column){
@@ -93,14 +96,23 @@ public static void main (String[] args){
 
 		 	this.point = new Pair(e.getX(), e.getY());
 		  System.out.println("You clicked "  + this.point);
+<<<<<<< HEAD
 	   	this.repaint();
+=======
+		  
+	   this.repaint();
+>>>>>>> 12507162e4988db7e44f7e8fb67a521bd65ead79
 	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
 	  }
 
 	 }
 
 	 @Override
+<<<<<<< HEAD
 	 	public void mouseEntered(MouseEvent e){
+=======
+	 public void mouseEntered(MouseEvent e) {
+>>>>>>> 12507162e4988db7e44f7e8fb67a521bd65ead79
 	  // TODO Auto-generated method stub
 
 	 }
@@ -130,6 +142,68 @@ public static void main (String[] args){
 
 		draw(g,25,25);
 		draw(g,520,25);
+		
+<<<<<<< HEAD
+if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
+			
+			int adj = (int) this.point.x % 25;
+			
+			
+			
+			Pair sq = new Pair(this.point.x, this.point.y);
+			
+			Pair a = this.point;
+			g.setColor(Color.RED);
+			g.fillRect((int)a.x, (int)a.y, 45, 45);
+			
+		}
+		
+		if(this.point != null && this.point.x >= 520 && this.point.y <= 475) {
+			
+			int adj = (int) this.point.x % 25;
+			
+			
+			
+			Pair sq = new Pair(this.point.x, this.point.y);
+			
+			Pair a = this.point;
+			g.setColor(Color.BLUE);
+			g.fillRect((int)a.x, (int)a.y, 45, 45);
+			
+		}
+
+
+=======
+		if(this.point.x >= 25 && this.point.y <= 475) {
+			
+			int adj = (int) this.point.x % 25;
+			
+			
+			
+			Pair sq = new Pair(this.point.x, this.point.y);
+			
+			Pair a = this.point;
+			g.setColor(Color.RED);
+			g.fillRect((int)a.x, (int)a.y, 45, 45);
+			
+		}
+		
+		if(this.point.x >= 520 && this.point.y <= 475) {
+			
+			int adj = (int) this.point.x % 25;
+			
+			
+			
+			Pair sq = new Pair(this.point.x, this.point.y);
+			
+			Pair a = this.point;
+			g.setColor(Color.BLUE);
+			g.fillRect((int)a.x, (int)a.y, 45, 45);
+			
+		}
+
+		
+>>>>>>> branch 'master' of https://github.com/eshin21/BattleshipS19.git
 	}
 
 }
