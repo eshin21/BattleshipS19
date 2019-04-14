@@ -4,28 +4,26 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.util.Random;
-import java.awt.event.*;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-
-public class Test extends JPanel implements MouseListener{
+public class Test extends JPanel{
 	public static final int BOX_WIDTH = 1024;
 	public static final int BOX_HEIGHT = 768;
 	public Pair[][] positionGrid;
-	public static Pair point;
 
 	public Test(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
 	}
 
 
-public static void main (String[] args){
+	public static void main (String[] args){
 		JFrame frame = new JFrame("Test Window");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(new Test());
 		frame.pack();
 		frame.setVisible(true);
 	}
-
 
 
 	public void draw(Graphics g, int startX, int startY){
@@ -56,43 +54,6 @@ public static void main (String[] args){
 			}
 
 		}
-	
-	@Override
-	 public void mouseClicked(MouseEvent e) {
-		
-	  if(e.getButton() == 1){
-		
-		 this.point = new Pair(e.getX(), e.getY());
-		  System.out.println("You clicked "  + this.point);
-	   this.repaint();
-	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
-	  }
-
-	 }
-
-	 @Override
-	  // TODO Auto-generated method stub
-
-	 }
-
-	 @Override
-	 public void mouseExited(MouseEvent e) {
-	  // TODO Auto-generated method stub
-
-	 }
-
-	 @Override
-	 public void mousePressed(MouseEvent e) {
-	  // TODO Auto-generated method stub
-
-	 }
-
-	 @Override
-	 public void mouseReleased(MouseEvent e) {
-	  // TODO Auto-generated method stub
-
-	 }
-
 
 
 	@Override
