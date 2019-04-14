@@ -36,7 +36,7 @@ public static void main (String[] args){
 			int columnX = startX;
 			int columnY = startY;
 
-			this.addMouseListener(this);
+
 			for (int r=0; r<=row; r++){
 				g.setColor(Color.WHITE);
 				g.fillRect(rowX,rowY,450,5);
@@ -71,7 +71,6 @@ public static void main (String[] args){
 	 }
 
 	 @Override
-	 public void mouseEntered(MouseEvent e) {
 	  // TODO Auto-generated method stub
 
 	 }
