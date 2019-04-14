@@ -27,7 +27,8 @@ public static void main (String[] args){
 	}
 
 
-public void draw(Graphics g, int startX, int startY){
+
+	public void draw(Graphics g, int startX, int startY){
 			int row = 10;
 			int column = 10;
 			int rowX = startX;
@@ -53,7 +54,7 @@ public void draw(Graphics g, int startX, int startY){
 				columnX += 45;
 				Pair columnRange = new Pair(rowX-45,rowY);
 			}
-			
+
 		}
 	
 	@Override
@@ -63,7 +64,6 @@ public void draw(Graphics g, int startX, int startY){
 		
 		 this.point = new Pair(e.getX(), e.getY());
 		  System.out.println("You clicked "  + this.point);
-		  
 	   this.repaint();
 	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
 	  }
@@ -104,7 +104,7 @@ public void draw(Graphics g, int startX, int startY){
 		draw(g,25,25);
 		draw(g,520,25);
 		
-		if(this.point != null) {
+if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
 			
 			int adj = (int) this.point.x % 25;
 			
@@ -118,8 +118,21 @@ public void draw(Graphics g, int startX, int startY){
 			
 		}
 		
+		if(this.point != null && this.point.x >= 520 && this.point.y <= 475) {
+			
+			int adj = (int) this.point.x % 25;
+			
+			
+			
+			Pair sq = new Pair(this.point.x, this.point.y);
+			
+			Pair a = this.point;
+			g.setColor(Color.BLUE);
+			g.fillRect((int)a.x, (int)a.y, 45, 45);
+			
+		}
 
-		
+
 	}
 
 }
