@@ -10,7 +10,7 @@ import java.awt.event.*;
 public class Test extends JPanel implements MouseListener{
 	public static final int BOX_WIDTH = 1024;
 	public static final int BOX_HEIGHT = 768;
-	public Pair[][] positionGrid;
+	public CoordinateRange[][] positionGrid;
 	public static Pair point;
 
 	public Test(){
@@ -91,15 +91,16 @@ public static void main (String[] args){
 
 	  if(e.getButton() == 1){
 
-		 this.point = new Pair(e.getX(), e.getY());
+		 	this.point = new Pair(e.getX(), e.getY());
 		  System.out.println("You clicked "  + this.point);
-	   this.repaint();
+	   	this.repaint();
 	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
 	  }
 
 	 }
 
 	 @Override
+	 	public void mouseEntered(MouseEvent e){
 	  // TODO Auto-generated method stub
 
 	 }
@@ -121,8 +122,6 @@ public static void main (String[] args){
 	  // TODO Auto-generated method stub
 
 	 }
-
-
 
 	@Override
 	public void paintComponent(Graphics g) {
