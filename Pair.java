@@ -18,4 +18,10 @@ public class Pair{
     public void flipY(){
     	y = -y;
     }
+    
+    public String toString() {
+    	
+    	String out = "(" + this.x + ", " + this.y +")";
+    	return out;
+    }
 }
