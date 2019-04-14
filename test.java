@@ -11,6 +11,7 @@ public class Test extends JPanel{
 	public static final int BOX_WIDTH = 1024;
 	public static final int BOX_HEIGHT = 768;
 	public Pair[][] positionGrid;
+	public static Pair point;
 
 	public Test(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
