@@ -8,6 +8,11 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 
+////////MAKING THE "TEST" OBJECT/////////////////////////////////
+////////Purpose: open JPanel, manage the Coordinate Grids (For "locking in" user-selected points), keep track of which rectangles have been drawn
+////////////////////////////////////////////////////////////////
+
+
 public class Test extends JPanel implements MouseListener{
 	public static final int BOX_WIDTH = 1024;
 	public static final int BOX_HEIGHT = 768;
@@ -31,7 +36,7 @@ public static void main (String[] args){
 	}
 
 
-/////////SET POSITION GRIDS FOR LOCKING
+/////////SET POSITION GRIDS FOR LOCKING//////////////////////
 
 public void setPositions() {
 	
@@ -77,18 +82,10 @@ public void draw(Graphics g, int startX, int startY){
 
 			this.addMouseListener(this);
 
-			
-			this.setPositions();
-			
-//			for(int i = 0; i<10; ++i) {
-//				
-//				for(int j = 0; j< 10; ++j)
-//					System.out.println(GridB[i][j]);
-//				
-//			}
+			this.setPositions(); /////CALL SETPOSITIONS METHOD (generates the positions of anchor points to lock in user selections to a discrete square/////
 			
 
-			for (int r=0; r<=row; r++){
+			for (int r=0; r<=row; r++){ ////draw grid
 				g.setColor(Color.WHITE);
 				g.fillRect(rowX,rowY,450,5);
 				rowY += 45;
@@ -106,19 +103,15 @@ public void draw(Graphics g, int startX, int startY){
 
 		}
 
-	public Pair findPoint (Pair point){
+	public Pair findPoint (Pair point){ ////takes user click and decides which square this clicked point belongs to ("locking in" user input)
 		
 			double x = point.x;
 			double y = point.y;
-			double beginX;
-			double endX;
-			double beginY;
-			double endY;
 			Pair cornerPoint = new Pair(25,25);
 			
-			if(x <= 475 && y <=475)
+			if(x <= 475 && y <=475) ///if click was in Grid A, call findPointA
 				cornerPoint = findPointA(point);
-			else if(x>=520 && y<=475)
+			else if(x>=520 && y<=475)///if click was in Grid B, call findPointB
 				cornerPoint = findPointB(point);
 
 			return cornerPoint;
@@ -126,12 +119,12 @@ public void draw(Graphics g, int startX, int startY){
 	}
 	
 	
-	///FIND POINT IN GRID A 
+	///FIND ANCHOR POINT BASED ON USER CLICK IN GRID A 
 	
 	public Pair findPointA (Pair point) { 
 		
 		
-		double minX = GridA[0][0].xrange.x;
+		double minX = GridA[0][0].xrange.x; ///INITIALIZATION 
 		double maxX = GridA[0][0].xrange.y;
 		double minY = GridA[0][0].yrange.x;
 		double maxY = GridA[0][0].yrange.y;
@@ -158,7 +151,7 @@ public void draw(Graphics g, int startX, int startY){
 			
 }
 
-/////FIND POINT IN GRID B	
+	///FIND ANCHOR POINT BASED ON USER CLICK IN GRID B 
 	
 	public Pair findPointB (Pair point) { 
 		
@@ -206,10 +199,9 @@ public void draw(Graphics g, int startX, int startY){
 		
 	  }
 		 
-	   // JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
 	  }
 
-	 
+///////////IGNORE THESE : NECESSARY FOR COMPILING
 
 	@Override
 	 	public void mouseEntered(MouseEvent e){
@@ -234,12 +226,18 @@ public void draw(Graphics g, int startX, int startY){
 	  // TODO Auto-generated method stub
 
 	 }
-	@Override
-	public void update(Graphics g) {
-		
-		paint(g);
-		
-	}
+	 
+/////////////////////////////END IGNORE
+	 
+	 
+	 
+//WAS TOLD FROM https://stackoverflow.com/questions/13549506/drawing-a-shape-but-keeping-the-most-previous-shape-on-screen-in-java THAT UPDATE METHOD COULD BE USED FOR PRESERVING SQUARES WHEN REPAINTING, BUT THIS WAS UNNECESS.
+//	@Override
+//	public void update(Graphics g) {
+//		
+//		paint(g);
+//		
+//	}
 	 
 
 	@Override
@@ -251,8 +249,8 @@ public void draw(Graphics g, int startX, int startY){
 
 		draw(g,25,25);
 		draw(g,520,25);
-		
-		if(rects != null) {
+		 
+		if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
 			for(Rectangle r : rects) {	
 				g.setColor(r.color);
 				g.fillRect(r.x, r.y, 45, 45);
@@ -262,16 +260,14 @@ public void draw(Graphics g, int startX, int startY){
 		if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
 
 
-			g.setColor(Color.RED);
-			Pair corner = this.findPoint(this.point);
-			
-			System.out.println("The key corner is " + corner);
-			
-			Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,45, Color.RED);
-			rects.add(add);
+			g.setColor(Color.RED); //set color
+			Pair corner = this.findPoint(this.point); //find corner 
+			System.out.println("The key corner is " + corner); 
+			Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,45, Color.RED); //make new rectangle based on this corner
+			rects.add(add); //add to arraylist of rectangles
 			
 			
-			g.fillRect((int)corner.x, (int)corner.y, 45, 45);
+			g.fillRect((int)corner.x, (int)corner.y, 45, 45); //somehow necessary--otherwise it won't draw until the next click
 
 		}
 
@@ -288,7 +284,7 @@ public void draw(Graphics g, int startX, int startY){
 			rects.add(add);
 			
 			
-			g.fillRect((int)corner.x, (int)corner.y, 45, 45);
+			g.fillRect((int)corner.x, (int)corner.y, 45, 45); //necessary
 
 		}
 
