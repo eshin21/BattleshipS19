@@ -24,4 +24,15 @@ public class Pair{
     	String out = "(" + this.x + ", " + this.y +")";
     	return out;
     }
+    
+    public boolean isWithin() {
+    	
+    	
+    	return false;
+    	
+    	
+    	
+    }
+    
+    
 }
