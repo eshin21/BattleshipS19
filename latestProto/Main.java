@@ -132,7 +132,7 @@ public void draw(Graphics g, int startX, int startY){
 				columnX += 45;
 			}
 
-			for(ship Button s: myShipButtonsArray[0]) { //draw buttons for Player A ships
+			for(shipButton s: myShipButtonsArray[0]) { //draw buttons for Player A ships
 
 				g.setColor(Color.RED);
 				g.fillRect(s.x, s.y, s.xdim, s.ydim);
@@ -147,7 +147,7 @@ public void draw(Graphics g, int startX, int startY){
 				g2d.drawString(s.type, s.x, s.y-10);
 			}
 
-			for(ship Button s: myShipButtonsArray[1]) { //draw buttons for Player B ships
+			for(shipButton s: myShipButtonsArray[1]) { //draw buttons for Player B ships
 
 				g.setColor(Color.GREEN);
 				g.fillRect(s.x, s.y, s.xdim, s.ydim);
@@ -194,7 +194,7 @@ public void draw(Graphics g, int startX, int startY){
 
 			String type = null;
 
-				for(ship Button s: myShipButtonsArray[0]) { // buttons for Player A ships
+				for(shipButton s: myShipButtonsArray[0]) { // buttons for Player A ships
 
 					if(s.inButton(point)) {
 						type = s.type;
@@ -209,7 +209,7 @@ public void draw(Graphics g, int startX, int startY){
 				}
 
 
-				for(ship Button s: myShipButtonsArray[1]) { //buttons for Player B ships
+				for(shipButton s: myShipButtonsArray[1]) { //buttons for Player B ships
 					if(s.inButton(point)) {
 
 						type = s.type;
