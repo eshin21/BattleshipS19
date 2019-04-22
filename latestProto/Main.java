@@ -21,9 +21,11 @@ public class Main extends JPanel implements MouseListener{
 	public static CoordinateRange[][] GridA;
 	public static CoordinateRange[][] GridB;
 	public Pair point;
-	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
+
+	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>(); // keeps track of drawn rectangles
 	ArrayList<Ship> armadaA = new ArrayList<Ship>();
 	ArrayList<Ship> armadaB = new ArrayList<Ship>();
+
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
 	public static Button[] gameButtons = Button.makePlayButtons();
 	public static Game myGame = new Game();
@@ -33,8 +35,6 @@ public class Main extends JPanel implements MouseListener{
 
 	public Main(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
-
-
 	}
 
 
@@ -42,18 +42,18 @@ public static void main (String[] args){
 
 		Main newMain = new Main();
 
-		if(newMain.quit == false) {
-		JFrame frame = new JFrame("B A T T L E S H I P");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setContentPane(newMain);
-		frame.pack();
-		frame.setVisible(true);
-		myGame.play();
-
+		if(newMain.quit == false) { // WORK IN PROGRESS, QUIT FUNCTION
+			JFrame frame = new JFrame("B A T T L E S H I P");
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setContentPane(newMain);
+			frame.pack();
+			frame.setVisible(true);
+			myGame.play();
 		}
 
 		else {
 			newMain = new Main();
+			newMain.addMouseListener(newMain);
 			System.out.println("You've started a new game.");
 			newMain.quit = false;
 			JFrame frame = new JFrame("B A T T L E S H I P");
@@ -62,8 +62,8 @@ public static void main (String[] args){
 			frame.pack();
 			frame.setVisible(true);
 			myGame.play();
-
 		}
+
 
 	}
 
@@ -112,18 +112,16 @@ public void draw(Graphics g, int startX, int startY){
 			int columnX = startX;
 			int columnY = startY;
 
-			this.addMouseListener(this);
+			this.setPositions(); // CALL SETPOSITIONS METHOD
 
-			this.setPositions(); /////CALL SETPOSITIONS METHOD
-
-			for (int r=0; r<=row; r++){ ////draw grid
+			for (int r=0; r<=row; r++){ // draw grid
 				g.setColor(Color.WHITE);
 				g.fillRect(rowX,rowY,450,5);
 				rowY += 45;
 			}
 
 			for (int c=0; c<=column; c++){
-				if (c==10){ //adjust for gap at end
+				if (c==10){ // adjust for gap at end
 					g.setColor(Color.WHITE);
 					g.fillRect(columnX,columnY,5,455);
 				}
@@ -162,12 +160,12 @@ public void draw(Graphics g, int startX, int startY){
 				g.setColor(Color.YELLOW);
 				g.fillRect(b.x, b.y, b.xdim,  b.ydim);
 				g.setColor(Color.BLACK);
-				if(b.type != "F I R E !") {
+				if(b.type != "F I R E !") { // SPECIAL CASE FOR "FIRE" BUTTON
 					g.drawString(b.type, b.x+12, b.y+30);
 				}
 
 				else {
-					g.drawString(b.type, b.x+15, b.y+30);
+					g.drawString(b.type, b.x+12, b.y+30);
 				}
 			}
 
@@ -184,13 +182,13 @@ public void draw(Graphics g, int startX, int startY){
 			if(x <= 475 && y <=475) { ///if click was in Grid A, call findPointA
 				cornerPoint = findPointA(point);
 			}
-			else if(x>=520 && y<=475) {///if click was in Grid B, call findPointB
+			else if(x>=520 && y<=475) { ///if click was in Grid B, call findPointB
 				cornerPoint = findPointB(point);
 			}
 
 
 
-			if(x >= 25 && y<=580 && y>=550) { //check whether point falls in ship buttons
+			if(x >= 25 && y<=580 && y>=550) { //check whether point falls in row of ship buttons
 
 			String type = null;
 
@@ -209,7 +207,7 @@ public void draw(Graphics g, int startX, int startY){
 				}
 
 
-				for(shipButton s: myShipButtonsArray[1]) { //buttons for Player B ships
+				for(shipButton s : myShipButtonsArray[1]) { // buttons for Player B ships
 					if(s.inButton(point)) {
 
 						type = s.type;
@@ -226,7 +224,7 @@ public void draw(Graphics g, int startX, int startY){
 
 
 
-			else if(x >= 320 && x<= 625 && y>=600 && y<=650) { //GENERAL REGION FOR GAMEPLAY BUTTONS
+			else if(x >= 320 && x<= 625 && y>=600 && y<=650) { // GENERAL REGION FOR GAMEPLAY BUTTONS
 
 				String type = null;
 
@@ -234,28 +232,29 @@ public void draw(Graphics g, int startX, int startY){
 				for(Button b : gameButtons) {
 					if(b.inButton(point)) {
 						type = b.type;
-					//go do stuff: make the privacy shades for "next", make a battle method for when FIRE is clicked (checkHit)
+						//go do stuff: make the privacy shades for "next", make a battle method for when FIRE is clicked (checkHit)
 
-					if(b.type == "Reset") {
+						if(b.type == "Reset") {
 
-						System.out.print("Resetting the board . . .");
+							System.out.print("Resetting the board . . .");
+							rects = new ArrayList<Rectangle>();
 
-						rects = new ArrayList<Rectangle>();
+						}
 
+						else if (b.type == "NEXT TURN"){
+
+							myGame.moveCount++;
+							System.out.println(myGame.moveCount);
+
+						}
 
 					}
-
-					}
-
 
 				}
 
 				System.out.print("You've selected the " + type + " button.");
 
 			}
-
-
-
 
 			return cornerPoint;
 
@@ -343,7 +342,7 @@ public void draw(Graphics g, int startX, int startY){
 
 	  }
 
-	  }
+	 }
 
 ///////////IGNORE THESE : NECESSARY FOR COMPILING
 
@@ -376,10 +375,9 @@ public void draw(Graphics g, int startX, int startY){
 
 
 	@Override
-	public void update(Graphics g) {
+	public void update(Graphics g) { // currently not used
 
 		paintComponent(g);
-
 
 	}
 
@@ -392,6 +390,7 @@ public void draw(Graphics g, int startX, int startY){
 		g.setColor(Color.BLACK); // sets background color
 		g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
 
+		// draw grids
 		draw(g,25,25);
 		draw(g,520,25);
 
@@ -400,16 +399,15 @@ public void draw(Graphics g, int startX, int startY){
 			for(Rectangle r : rects) {
 				g.setColor(r.color);
 				g.fillRect(r.x, r.y, 45, r.height);
-
-				}
-
 			}
 
+		}
+
+		// DRAW SHIPS
 
 		if(this.currentShip != null){
 
-
-			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
+			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
 
 
 				g.setColor(Color.RED); //set color
@@ -424,7 +422,7 @@ public void draw(Graphics g, int startX, int startY){
 
 			}
 
-			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) {
+			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
 
 				g.setColor(Color.GREEN);
 				Pair corner = this.findPoint(this.point);
@@ -454,8 +452,8 @@ public void draw(Graphics g, int startX, int startY){
 			g.setColor(Color.RED);
 			g2d.drawString("PLAYER 2 - SET YOUR SHIPS.", 520, 500);
 		}
-		else if (myGame.moveCount%2==0){ //if move is even(1st player)
-			g.setColor(Color.GRAY);
+		else if (myGame.moveCount%2==0 && myGame.moveCount>1){ //if move is even(1st player)
+			g.setColor(Color.BLACK);
 			g.fillRect(520,20,470,470);
 		}
 		else { // 2nd player
