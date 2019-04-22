@@ -20,7 +20,7 @@ public class Main extends JPanel implements MouseListener{
 	public static final int BOX_HEIGHT = 768;
 	public static CoordinateRange[][] GridA;
 	public static CoordinateRange[][] GridB;
-	public  Pair point;
+	public Pair point;
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 	ArrayList<Ship> armadaA = new ArrayList<Ship>();
 	ArrayList<Ship> armadaB = new ArrayList<Ship>();
@@ -435,6 +435,32 @@ public void draw(Graphics g, int startX, int startY){
 
 			}
 
+		}
+
+		// DRAWS GREY BOX OVER NON-PLAYER'S BOARD
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
+
+
+		if (myGame.moveCount==0){ // first player places ships
+			g.setColor(Color.BLACK);
+			g.fillRect(520,20,470,470);
+			g.setColor(Color.RED);
+			g2d.drawString("PLAYER 1 - SET YOUR SHIPS.", 30, 500);
+		}
+		else if (myGame.moveCount==1){ // 2nd player places ships
+			g.setColor(Color.BLACK);
+			g.fillRect(25,20,470,470);
+			g.setColor(Color.RED);
+			g2d.drawString("PLAYER 2 - SET YOUR SHIPS.", 520, 500);
+		}
+		else if (myGame.moveCount%2==0){ //if move is even(1st player)
+			g.setColor(Color.GRAY);
+			g.fillRect(520,20,470,470);
+		}
+		else { // 2nd player
+			g.setColor(Color.BLACK);
+			g.fillRect(25,20,470,470);
 		}
 
 
