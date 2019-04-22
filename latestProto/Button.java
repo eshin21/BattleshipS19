@@ -19,10 +19,11 @@ public class Button{
 	
 	public static Button[] makePlayButtons() {
 		
-		Button[] toReturn = new Button[2];
+		Button[] toReturn = new Button[3];
 		
-		toReturn[0] = new Button("F I R E !", 320, 650, 80, 50);
-		toReturn[1] = new Button("Next turn", 545, 650, 80, 50);
+		toReturn[0] = new Button("F I R E !", 320, 600, 80, 50);
+		toReturn[1] = new Button("Next turn", 545, 600, 80, 50);
+		toReturn[2] = new Button("Reset", 430, 600, 80, 50);
 		
 		
 		return toReturn;

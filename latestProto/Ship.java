@@ -13,6 +13,7 @@ public class Ship{
 	Color color;
 	public ArrayList<Rectangle> body = new ArrayList<Rectangle>();
 	int player; //denotes which player this ship belongs to
+	int index; //this ship's location in the armada ArrayList
 
 	public Ship(Pair p, int length, int health, Color color, int player){
 

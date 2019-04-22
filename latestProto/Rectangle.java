@@ -23,8 +23,8 @@ public class Rectangle {
      public Rectangle(int x, int y, int width, int height, Color color) {
     	 this.x = x;
     	 this.y = y;
-    	 this.width = 45;
-    	 this.height = 45;
+    	 this.width = width;
+    	 this.height = height;
     	 this.color = color;
      }
 

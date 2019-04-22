@@ -26,6 +26,9 @@ public class Main extends JPanel implements MouseListener{
 	ArrayList<Ship> armadaB = new ArrayList<Ship>();
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();	
 	public static Button[] gameButtons = Button.makePlayButtons();
+	public static Game myGame = new Game();
+	public boolean quit = false;
+	public Ship currentShip;
 	
 
 	public Main(){
@@ -36,11 +39,32 @@ public class Main extends JPanel implements MouseListener{
 
 
 public static void main (String[] args){
+	
+		Main newMain = new Main();
+		
+		if(newMain.quit == false) {
 		JFrame frame = new JFrame("B A T T L E S H I P");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setContentPane(new Main());
+		frame.setContentPane(newMain);
 		frame.pack();
 		frame.setVisible(true);
+		myGame.play();
+		
+		}
+		
+		else {
+			newMain = new Main();
+			System.out.println("You've started a new game.");
+			newMain.quit = false;
+			JFrame frame = new JFrame("B A T T L E S H I P");
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setContentPane(newMain);
+			frame.pack();
+			frame.setVisible(true);
+			myGame.play();
+			
+		}
+		
 	}
 
 
@@ -90,7 +114,7 @@ public void draw(Graphics g, int startX, int startY){
 
 			this.addMouseListener(this);
 
-			this.setPositions(); /////CALL SETPOSITIONS METHOD (generates the positions of anchor points to lock in user selections to a discrete square/////
+			this.setPositions(); /////CALL SETPOSITIONS METHOD 
 
 			for (int r=0; r<=row; r++){ ////draw grid
 				g.setColor(Color.WHITE);
@@ -146,6 +170,8 @@ public void draw(Graphics g, int startX, int startY){
 					g.drawString(b.type, b.x+15, b.y+30);
 				}
 			}
+			
+			
 
 		}
 
@@ -162,7 +188,9 @@ public void draw(Graphics g, int startX, int startY){
 				cornerPoint = findPointB(point);
 			}
 			
-			else if(x >= 25 && y<=580 && y>=550) { //check whether point falls in ship buttons
+
+			
+			if(x >= 25 && y<=580 && y>=550) { //check whether point falls in ship buttons
 				
 			String type = null;
 			
@@ -170,9 +198,11 @@ public void draw(Graphics g, int startX, int startY){
 					
 					if(s.inButton(point)) {
 						type = s.type;
+						Ship shipAdd = new Ship(point, s.length, s.length, Color.RED, 0);
+						myGame.armada_A.add(shipAdd);
+						currentShip = shipAdd;
 						
-						//go do stuff: add this ship into the armada and set the length of the drawRect to 25*shiplength
-						
+
 					}
 					cornerPoint = new Pair(s.x, s.y);
 				
@@ -181,7 +211,11 @@ public void draw(Graphics g, int startX, int startY){
 				
 				for(shipButton s: myShipButtonsArray[1]) { //buttons for Player B ships
 					if(s.inButton(point)) {
-						type = s.type;
+						
+						type = s.type;			
+						Ship shipAdd = new Ship(point, s.length, s.length, Color.GREEN, 0);
+						myGame.armada_B.add(shipAdd);
+						currentShip = shipAdd;
 						//go do stuff: add this ship into the armada and set the length of the drawRect to 25*shiplength
 
 				}
@@ -190,15 +224,28 @@ public void draw(Graphics g, int startX, int startY){
 				System.out.print("You've selected a " + type + " ship");
 		}
 			
-			else if(x >= 320 && x<= 625 && y>=650 && y<=700) { //GENERAL REGION FOR GAMEPLAY BUTTONS
+			
+			
+			else if(x >= 320 && x<= 625 && y>=600 && y<=650) { //GENERAL REGION FOR GAMEPLAY BUTTONS 
 				
 				String type = null;
 				
 				
 				for(Button b : gameButtons) {
-					if(b.inButton(point))
+					if(b.inButton(point)) {
 						type = b.type;
 					//go do stuff: make the privacy shades for "next", make a battle method for when FIRE is clicked (checkHit)
+						
+					if(b.type == "Reset") {
+						
+						System.out.print("Resetting the board . . .");
+
+						rects = new ArrayList<Rectangle>();
+						
+						
+					}
+						
+					}
 
 					
 				}
@@ -328,16 +375,17 @@ public void draw(Graphics g, int startX, int startY){
 	 
 	 
 	 
-//WAS TOLD FROM https://stackoverflow.com/questions/13549506/drawing-a-shape-but-keeping-the-most-previous-shape-on-screen-in-java THAT UPDATE METHOD COULD BE USED FOR PRESERVING SQUARES WHEN REPAINTING, BUT THIS WAS UNNECESS.
-//	@Override
-//	public void update(Graphics g) {
-//		
-//		paint(g);
-//		
-//	}
+	@Override
+	public void update(Graphics g) {
+		
+		paintComponent(g);
+		
+		
+	}
 	 
 
-	@Override
+	@Override //default method that will run as part of graphics
+	
 	public void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
@@ -348,41 +396,45 @@ public void draw(Graphics g, int startX, int startY){
 		draw(g,520,25);
 		 
 		if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+			
 			for(Rectangle r : rects) {	
 				g.setColor(r.color);
-				g.fillRect(r.x, r.y, 45, 45);
+				g.fillRect(r.x, r.y, 45, r.height);
+					
+				}
+				
 			}
-		}
 
-		if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
-
-
-			g.setColor(Color.RED); //set color
-			Pair corner = this.findPoint(this.point); //find corner 
-			System.out.println("The key corner is " + corner); 
-			Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,45, Color.RED); //make new rectangle based on this corner
-			rects.add(add); //add to arraylist of rectangles
+		
+		if(this.currentShip != null){
 			
 			
-			g.fillRect((int)corner.x, (int)corner.y, 45, 45); // necessary--otherwise it won't draw until the next click
-
-		}
-
-		if(this.point != null && this.point.x >= 520 && this.point.y <= 475) {
+			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
 
 
-			g.setColor(Color.GREEN);
-			
-			Pair corner = this.findPoint(this.point);
-			
-			System.out.println("The key corner is " + corner);
-			
-			Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,45, Color.GREEN);
-			rects.add(add);
-			
-			
-			g.fillRect((int)corner.x, (int)corner.y, 45, 45); //necessary
+				g.setColor(Color.RED); //set color
+				Pair corner = this.findPoint(this.point); //find corner 
+				System.out.println("The key corner is " + corner); 
+				Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,currentShip.length*45, Color.RED); //make new rectangle based on this corner
+				
+				
+				///EDGE AWARENESS: ADD IT ONLY IF THE COORDINATE & LENGTH ARE COMPATIBLE
+				rects.add(add); //add to arraylist of rectangles
+				g.fillRect((int)corner.x, (int)corner.y,45,currentShip.length*45); // necessary--otherwise it won't draw until the next click
 
+			}
+
+			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) {
+
+				g.setColor(Color.GREEN);
+				Pair corner = this.findPoint(this.point);
+				System.out.println("The key corner is " + corner);
+				Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,currentShip.length*45, Color.GREEN); //make new rectangle based on this corner
+				rects.add(add); //add to arraylist of rectangles
+				g.fillRect((int)corner.x, (int)corner.y,45,currentShip.length*45); // necessary--otherwise it won't draw until the next click
+
+			}
+		
 		}
 
 
