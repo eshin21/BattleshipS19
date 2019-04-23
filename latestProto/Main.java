@@ -43,6 +43,7 @@ public static void main (String[] args){
 		Main newMain = new Main();
 
 		if(newMain.quit == false) { // WORK IN PROGRESS, QUIT FUNCTION
+			newMain.addMouseListener(newMain);
 			JFrame frame = new JFrame("B A T T L E S H I P");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setContentPane(newMain);
@@ -101,10 +102,9 @@ public void setPositions() {
 
 	}
 
-
 }
 
-public void draw(Graphics g, int startX, int startY){
+public void drawGrid(Graphics g, int startX, int startY){
 			int row = 10;
 			int column = 10;
 			int rowX = startX;
@@ -180,10 +180,10 @@ public void draw(Graphics g, int startX, int startY){
 			Pair cornerPoint = new Pair(25,25);
 
 			if(x <= 475 && y <=475) { ///if click was in Grid A, call findPointA
-				cornerPoint = findPointA(point);
+				cornerPoint = point.findPointA(GridA);
 			}
 			else if(x>=520 && y<=475) { ///if click was in Grid B, call findPointB
-				cornerPoint = findPointB(point);
+				cornerPoint = point.findPointB(GridB);
 			}
 
 
@@ -241,7 +241,7 @@ public void draw(Graphics g, int startX, int startY){
 
 						}
 
-						else if (b.type == "NEXT TURN"){
+						else if (b.type == "Next Turn"){
 
 							myGame.moveCount++;
 							System.out.println(myGame.moveCount);
@@ -259,76 +259,6 @@ public void draw(Graphics g, int startX, int startY){
 			return cornerPoint;
 
 	}
-
-
-	///FIND ANCHOR POINT BASED ON USER CLICK IN GRID A
-
-	public Pair findPointA (Pair point) {
-
-
-		double minX = GridA[0][0].xrange.x; ///INITIALIZATION
-		double maxX = GridA[0][0].xrange.y;
-		double minY = GridA[0][0].yrange.x;
-		double maxY = GridA[0][0].yrange.y;
-
-		Pair corner = new Pair(0,0);
-
-			for(int i = 0; i<10; ++i) {
-
-				for(int j = 0; j<10; ++j) {
-					minX = GridA[i][j].xrange.x;
-					maxX = GridA[i][j].xrange.y;
-					minY = GridA[i][j].yrange.x;
-					maxY = GridA[i][j].yrange.y;
-					if(point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY )
-						corner = new Pair(minX, minY);
-
-				}
-
-			}
-
-
-			return corner;
-
-
-}
-
-	///FIND ANCHOR POINT BASED ON USER CLICK IN GRID B
-
-	public Pair findPointB (Pair point) {
-
-
-
-		double minX = GridB[0][0].xrange.x;
-		double maxX = GridB[0][0].xrange.y;
-		double minY = GridB[0][0].yrange.x;
-		double maxY = GridB[0][0].yrange.y;
-
-
-		Pair corner = new Pair(0,0);
-
-			for(int i = 0; i<10; ++i) {
-
-				for(int j = 0; j<10; ++j) {
-
-					minX = GridB[i][j].xrange.x;
-					maxX = GridB[i][j].xrange.y;
-					minY = GridB[i][j].yrange.x;
-					maxY = GridB[i][j].yrange.y;
-					if(point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY )
-						corner = new Pair(minX, minY);
-
-				}
-
-
-			}
-
-
-			return corner;
-
-
-}
-
 
 	@Override
 	 public void mouseClicked(MouseEvent e) {
@@ -391,8 +321,8 @@ public void draw(Graphics g, int startX, int startY){
 		g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
 
 		// draw grids
-		draw(g,25,25);
-		draw(g,520,25);
+		drawGrid(g,25,25);
+		drawGrid(g,520,25);
 
 		if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
 
@@ -455,10 +385,12 @@ public void draw(Graphics g, int startX, int startY){
 		else if (myGame.moveCount%2==0 && myGame.moveCount>1){ //if move is even(1st player)
 			g.setColor(Color.BLACK);
 			g.fillRect(520,20,470,470);
+			drawGrid(g,520,25);
 		}
 		else { // 2nd player
 			g.setColor(Color.BLACK);
 			g.fillRect(25,20,470,470);
+			drawGrid(g,25,25);
 		}
 
 
