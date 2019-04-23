@@ -65,7 +65,6 @@ public static void main (String[] args){
 			myGame.play();
 		}
 
-
 	}
 
 
