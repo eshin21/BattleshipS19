@@ -39,5 +39,28 @@ public class Rectangle {
          
 
      }
+     
+     public boolean checkEdge(Pair p) {
+    	 
+    	 if(p.y + this.height <= 475 && p.x + this.width <= 475 && p.x - this.width>=25 ||  p.y + this.height <= 475 && p.x + this.width <= 975 && p.x-this.width>=520) {
+    		
+    		return true; 
+    		 
+    	 }
+    	 
+    	 
+    	 else
+    		 return false;
+    	 
+     }
+     
+     public Rectangle rotate() { //rotate clockwise 90 deg
+    	
+    	 Rectangle toReturn = new Rectangle(this.x, this.y, this.height, this.width, this.color);
+    	 
+    	 return toReturn;
+    	 
+    	 
+     }
 	
 }
