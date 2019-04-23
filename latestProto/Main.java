@@ -55,7 +55,6 @@ public static void main (String[] args){
 		else {
 			newMain = new Main();
 			newMain.addMouseListener(newMain);
-			System.out.println("You've started a new game.");
 			newMain.quit = false;
 			JFrame frame = new JFrame("B A T T L E S H I P");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -319,6 +318,9 @@ public void drawGrid(Graphics g, int startX, int startY){
 		g.setColor(Color.BLACK); // sets background color
 		g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
 
+		g.setColor(Color.ORANGE);
+		g.fillRect(0,0,BOX_WIDTH,25);
+
 		// draw grids
 		drawGrid(g,25,25);
 		drawGrid(g,520,25);
@@ -330,6 +332,14 @@ public void drawGrid(Graphics g, int startX, int startY){
 				g.fillRect(r.x, r.y, 45, r.height);
 			}
 
+		}
+
+		// OPENING
+
+		if (myGame.moveCount==0){
+			Graphics2D g2d = (Graphics2D) g;
+			g.setColor(Color.BLUE);
+			g2d.drawString("WELCOME TO BATTLESHIP. You've started a new game. To START, PLAYER 1, press the NEXT TURN button.", 30, 17);
 		}
 
 		// DRAW SHIPS
@@ -368,27 +378,26 @@ public void drawGrid(Graphics g, int startX, int startY){
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
 
-
-		if (myGame.moveCount==0){ // first player places ships
+		if (myGame.moveCount==1){ // first player places ships
 			g.setColor(Color.BLACK);
-			g.fillRect(520,20,470,470);
-			g.setColor(Color.RED);
-			g2d.drawString("PLAYER 1 - SET YOUR SHIPS.", 30, 500);
+			g.fillRect(520,25,470,470);
+			g.setColor(Color.BLUE);
+			g2d.drawString("PLAYER 1 - SET YOUR SHIPS.", 30, 17);
 		}
-		else if (myGame.moveCount==1){ // 2nd player places ships
+		else if (myGame.moveCount==2){ // 2nd player places ships
 			g.setColor(Color.BLACK);
-			g.fillRect(25,20,470,470);
-			g.setColor(Color.RED);
-			g2d.drawString("PLAYER 2 - SET YOUR SHIPS.", 520, 500);
+			g.fillRect(25,25,470,470);
+			g.setColor(Color.BLUE);
+			g2d.drawString("PLAYER 2 - SET YOUR SHIPS.", 520, 17);
 		}
-		else if (myGame.moveCount%2==0 && myGame.moveCount>1){ //if move is even(1st player)
+		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(1st player)
 			g.setColor(Color.BLACK);
-			g.fillRect(520,20,470,470);
+			g.fillRect(520,25,470,470);
 			drawGrid(g,520,25);
 		}
 		else { // 2nd player
 			g.setColor(Color.BLACK);
-			g.fillRect(25,20,470,470);
+			g.fillRect(25,25,470,470);
 			drawGrid(g,25,25);
 		}
 
