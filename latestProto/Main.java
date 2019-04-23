@@ -137,10 +137,15 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 
 				Graphics2D g2d = (Graphics2D) g;
-				g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
+				g2d.setFont(new Font("Courier", Font.BOLD, 13));
 
-
-				g2d.drawString(s.type, s.x, s.y-10);
+				if (s.type != "Light Cruiser"){
+					g2d.drawString(s.type, s.x, s.y-10);
+				}
+				else{
+					g2d.drawString("Light",s.x, s.y-20);
+					g2d.drawString("Cruiser",s.x, s.y-10);
+				}
 			}
 
 			for(shipButton s: myShipButtonsArray[1]) { //draw buttons for Player B ships
@@ -148,7 +153,19 @@ public void drawGrid(Graphics g, int startX, int startY){
 				g.setColor(Color.GREEN);
 				g.fillRect(s.x, s.y, s.xdim, s.ydim);
 				g.setColor(Color.WHITE);
-				g.drawString(s.type, s.x, s.y-10);
+
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.setFont(new Font("Courier", Font.BOLD, 13));
+
+				if (s.type != "Light Cruiser"){
+					g2d.drawString(s.type, s.x, s.y-10);
+				}
+				else{
+					g2d.drawString("Light",s.x, s.y-20);
+					g2d.drawString("Cruiser",s.x, s.y-10);
+				}
+
+
 			}
 
 
@@ -339,6 +356,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 		if (myGame.moveCount==0){
 			Graphics2D g2d = (Graphics2D) g;
 			g.setColor(Color.BLUE);
+			g2d.setFont(new Font("Courier", Font.BOLD, 13));
 			g2d.drawString("WELCOME TO BATTLESHIP. You've started a new game. To START, PLAYER 1, press the NEXT TURN button.", 30, 17);
 		}
 
@@ -374,21 +392,21 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 		}
 
-		// DRAWS GREY BOX OVER NON-PLAYER'S BOARD
+		// DRAWS BLACK BOX OVER NON-PLAYER'S BOARD
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
+		g2d.setFont(new Font("Courier", Font.BOLD, 13));
 
 		if (myGame.moveCount==1){ // first player places ships
 			g.setColor(Color.BLACK);
 			g.fillRect(520,25,470,470);
 			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 1 - SET YOUR SHIPS.", 30, 17);
+			g2d.drawString("PLAYER 1, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 17);
 		}
 		else if (myGame.moveCount==2){ // 2nd player places ships
 			g.setColor(Color.BLACK);
 			g.fillRect(25,25,470,470);
 			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 2 - SET YOUR SHIPS.", 520, 17);
+			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 17);
 		}
 		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(1st player)
 			g.setColor(Color.BLACK);
