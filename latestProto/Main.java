@@ -372,10 +372,18 @@ public void drawGrid(Graphics g, int startX, int startY){
 				System.out.println("The key corner is " + corner);
 				Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,currentShip.length*45, Color.RED); //make new rectangle based on this corner
 
+                if(add.checkEdge(corner)) {                 ///EDGE AWARENESS: ADD IT ONLY IF THE COORDINATE & LENGTH ARE COMPATIBLE
+                    rects.add(add); //add to arraylist of rectangles    
+                    g.fillRect((int)corner.x, (int)corner.y,45,currentShip.length*45); // necessary--otherwise it won't draw until the next click
 
-				///EDGE AWARENESS: ADD IT ONLY IF THE COORDINATE & LENGTH ARE COMPATIBLE
-				rects.add(add); //add to arraylist of rectangles
-				g.fillRect((int)corner.x, (int)corner.y,45,currentShip.length*45); // necessary--otherwise it won't draw until the next click
+                }
+                
+                else if(! add.checkEdge(corner)) {
+                    
+                    System.out.println("Whoops. This ship doesn't fit. Try repositioning.");
+                    
+                    
+                }
 
 			}
 
