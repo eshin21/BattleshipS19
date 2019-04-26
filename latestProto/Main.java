@@ -24,12 +24,12 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public Pair point;
 
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>(); // keeps track of drawn rectangles
-	
+
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
 	public static Button[] gameButtons = Button.makePlayButtons();
 	public static Game myGame = new Game();
 	public boolean quit = false;
-	
+
 	public Ship currentShip;
 	public int index = 0;
 
@@ -264,11 +264,11 @@ public void drawGrid(Graphics g, int startX, int startY){
 							System.out.println(myGame.moveCount);
 
 						}
-						
+
 						else if(b.type == "Rotate") {
-						    
+
 						    requestFocusInWindow();
-						    
+
 						}
 
 					}
@@ -302,7 +302,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 	@Override
 	 	public void mouseEntered(MouseEvent e){
 	  // TODO Auto-generated method stub
-	    
+
 
 	 }
 
@@ -403,6 +403,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 17);
 		}
 		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(1st player)
+			g.setColor(Color.BLUE);
+			g2d.drawString("PLAYER 1, choose your move.", 30, 17);
 			g.setColor(Color.BLACK);
 			g.fillRect(520,25,470,470);
 			drawGrid(g,520,25);
@@ -411,8 +413,9 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g.setColor(Color.BLACK);
 			g.fillRect(25,25,470,470);
 			drawGrid(g,25,25);
+			g.setColor(Color.BLUE);
+			g2d.drawString("PLAYER 1, choose your move.", 500, 17);
 		}
-
 
 	}
 
@@ -426,7 +429,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 
         char c=e.getKeyChar();
         System.out.println("You pressed down: " + c);
-        
+
         if(c=='r') {
             int current = this.rects.size() - 1;
             Rectangle toAdd = this.rects.get(current).rotate();
@@ -434,11 +437,11 @@ public void drawGrid(Graphics g, int startX, int startY){
             this.rects.add(toAdd);
             this.repaint(); //left off here a858
         }
-        
+
         if(c=='q') {
             System.out.println("Exiting rotate mode");
             setEnabled(false);
-            
+
         }
     }
 
@@ -446,14 +449,14 @@ public void drawGrid(Graphics g, int startX, int startY){
     @Override
     public void keyReleased(KeyEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 
 
     @Override
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

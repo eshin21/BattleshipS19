@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 
-///////////////////GAME CLASS: MANAGES SHIP ARRAYS, MOVE COUNT, CHECKS GAME OVER, HIT/MISS 
+///////////////////GAME CLASS: MANAGES SHIP ARRAYS, MOVE COUNT, CHECKS GAME OVER, HIT/MISS
 
 public class Game{
 	public int moveCount;
@@ -20,6 +20,9 @@ public class Game{
 	public boolean gameOver; //need to keep track of when game stops
 	public int playerA_status;
 	public int playerB_status;
+
+	public boolean [][] playerA_move = new boolean [10][10];
+	public boolean [][] playerB_move = new boolean [10][10];
 	public ArrayList<Ship> armada_A = new ArrayList <Ship>(5);
 	public ArrayList<Ship> armada_B = new ArrayList <Ship>(5);
 
@@ -35,7 +38,7 @@ public class Game{
 
 	public void play() {
 
-		
+
 		System.out.println("Get ready to play. . .");
 		System.out.println("Player One: Place your ships by clicking one of the ship buttons below the grid.");
 		System.out.println("Then, click the place on the grid where you want to place the ship.");
@@ -43,17 +46,17 @@ public class Game{
 
 //		Battleship.world.armada_A = new Ship[5];
 //		Battleship.world.armada_B = new Ship[5];
-//		
-//		
+//
+//
 //		Pair p = new Pair(0,0);
 //		Color color;
-		
-		
+
+
 //		for(int i = 0; i<=4; ++i) {
 //			armada_A[i] = new Ship(p, i+2, i+2, color.BLUE, 0);
 //			armada_B[i] = new Ship(p, i+2, i+2, color.RED, 1);
 //		}
-		
+
 		while(moveCount <= 1) {
 			placeShip();
 
@@ -66,7 +69,6 @@ public class Game{
 
 		else if(moveCount % 2 == 1 && this.gameOver== false) {
 			System.out.println("It's Player 2's turn.");
-
 
 		}
 
@@ -97,16 +99,16 @@ public class Game{
 			return gameOver;
 
 	}
-	
-	
+
+
 	public void placeShip() {
-				 	
+
 		//left off here
 		//spit out an x y when clicked
 		//pass that x y into world update so that the update method can draw the ships
-	
-		
-		
+
+
+
 	}
 
 //
@@ -116,7 +118,7 @@ public class Game{
 //    	public static final int FPS = 60;
 //    	public Pair p;
 //    	World world;
-//    	
+//
 //    	public MouseShips(){
 //    	    world = new World(WIDTH, HEIGHT, 5);
 //    	    addMouseListener(this);
@@ -130,9 +132,9 @@ public class Game{
 //    			while(true){
 //    				Battleship.world.updateShips(1.0 / (double)FPS);
 //    					repaint();
-//    					try{	
+//    					try{
 //    						Thread.sleep(1000/FPS);
-//    					}	
+//    					}
 //    					catch(InterruptedException e){}
 //    				}
 //
@@ -143,30 +145,30 @@ public class Game{
 //    public void mouseClicked(MouseEvent e) {
 //    	int x = e.getX();
 //    	int y = e.getY();
-//    	p = new Pair(x,y); 
+//    	p = new Pair(x,y);
 //
 //    }
-//    
+//
 //    public void addNotify() {
 //        super.addNotify();
 //        requestFocus();
-//        
+//
 //    }
-//    
-//  
+//
+//
 //}
 
 
 /* class World{
-	
+
     int height;
     int width;
-    
+
     int numShips_A;
     int numShips_B;
     Ship armada_A[];
     Ship armada_B[];
-    
+
     public World(int height, int width, int armadaSize) {
     	this.height = height;
     	this.width = width;
@@ -174,25 +176,25 @@ public class Game{
     	this.numShips_B = armadaSize;
     	Pair p = new Pair(0,0);
     	Color color = null;
-    	
+
     	for(int i = 0; i<=armadaSize-1; ++i) {
 			armada_A[i] = new Ship(p, i+2, i+2, color.BLUE, 0);
 			armada_B[i] = new Ship(p, i+2, i+2, color.RED, 1);
 		}
-    	
-    	
+
+
     }
-    
+
     public Ship[] getArmada_A() {
     	return this.armada_A;
-    	
+
     }
-    
+
     public Ship[] getArmada_B() {
     	return this.armada_B;
-    	
+
     }
-    
+
     public void drawShips(Graphics g){
     	for (int i = 0; i < this.numShips_A - 1; i++){
     	    this.armada_A[i].draw(g);
@@ -204,6 +206,6 @@ public class Game{
     	    spheres[i].update(this, time);
         }
 
-    
+
 	} */
 }
