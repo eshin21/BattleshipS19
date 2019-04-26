@@ -362,29 +362,27 @@ public void drawGrid(Graphics g, int startX, int startY){
 		}
 
 		// DRAW SHIPS
-	     if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
-
+	  if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
 	            for(Rectangle r : rects) {
 	                g.setColor(r.color);
 	                g.fillRect(r.x, r.y, 45, r.height);
 	            }
-
-	        }
+	  }
 
 		if(this.currentShip != null){
 
 			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
-			    g.setColor(Color.RED);
-			    this.currentShip.placeShip(this, g, Color.RED);
+				    g.setColor(Color.RED);
+				    this.currentShip.placeShip(this, g, Color.RED);
 
 			}
 
 			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
-			    g.setColor(Color.GREEN);
-	             this.currentShip.placeShip(this, g, Color.GREEN);
-		}
+				g.setColor(Color.GREEN);
+		    this.currentShip.placeShip(this, g, Color.GREEN);
+			}
 
-	}
+		}
 
 		// DRAWS BLACK BOX OVER NON-PLAYER'S BOARD
 		Graphics2D g2d = (Graphics2D) g;

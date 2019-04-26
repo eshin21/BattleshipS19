@@ -76,7 +76,7 @@ public class Ship{
     public void placeShipA (Graphics g, Ship s, Main m, Color c) {
 
         Pair corner = m.findPoint(m.point);
-Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45, m.currentShip.length*45, c); //make new rectangle based on this corner
+				Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45, m.currentShip.length*45, c); //make new rectangle based on this corner
 
         if(add.checkEdge(corner).equals(add)) {                 ///EDGE AWARENESS: ADD IT ONLY IF THE COORDINATE & LENGTH ARE COMPATIBLE
             g.setColor(c);
@@ -91,29 +91,20 @@ Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45, m.currentShip.len
             m.rects.add(adj);
             m.index++;
             g.fillRect(adj.x, adj.y, adj.width, adj.height);
-
         }
-
-
-
-
-
-
-
     }
 
     public void placeShipB (Graphics g, Ship s, Main m, Color c) {
 
         Pair corner = m.findPoint(m.point);
-Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45, m.currentShip.length*45, c); //make new rectangle based on this corner
-Rectangle adj = add.checkEdge(corner);
+				Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45, m.currentShip.length*45, c); //make new rectangle based on this corner
+				Rectangle adj = add.checkEdge(corner);
 
         if(add.equals(adj)) {                 ///EDGE AWARENESS: ADD IT ONLY IF THE COORDINATE & LENGTH ARE COMPATIBLE
             g.setColor(c);
             m.rects.add(add); //add to arraylist of rectangles
             m.index++;
             g.fillRect((int)corner.x, (int)corner.y,45,m.currentShip.length*45); // necessary--otherwise it won't draw until the next click
-
         }
 
         else {

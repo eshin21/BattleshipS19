@@ -100,6 +100,10 @@ public class Game{
 
 	}
 
+	public boolean hitShip (Point p){
+		
+	}
+
 
 	public void placeShip() {
 
