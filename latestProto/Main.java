@@ -24,15 +24,14 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public Pair point;
 
 	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>(); // keeps track of drawn rectangles
-	ArrayList<Ship> armadaA = new ArrayList<Ship>();
-	ArrayList<Ship> armadaB = new ArrayList<Ship>();
-
+	
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
 	public static Button[] gameButtons = Button.makePlayButtons();
 	public static Game myGame = new Game();
 	public boolean quit = false;
+	
 	public Ship currentShip;
-
+	public int index = 0;
 
 	public Main(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
@@ -45,11 +44,13 @@ public static void main (String[] args){
 
 		if(newMain.quit == false) { // WORK IN PROGRESS, QUIT FUNCTION
 			newMain.addMouseListener(newMain);
+			newMain.addKeyListener(newMain);
 			JFrame frame = new JFrame("B A T T L E S H I P");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setContentPane(newMain);
 			frame.pack();
 			frame.setVisible(true);
+			frame.setFocusable(true);
 			myGame.play();
 		}
 
@@ -230,7 +231,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 						Ship shipAdd = new Ship(point, s.length, s.length, Color.GREEN, 0);
 						myGame.armada_B.add(shipAdd);
 						currentShip = shipAdd;
-						//go do stuff: add this ship into the armada and set the length of the drawRect to 25*shiplength
+						//go do stuff: add this ship into the armada and set the currentShip field to this ship
 
 				}
 					cornerPoint = new Pair(s.x, s.y);
@@ -240,7 +241,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 
 
-			else if(x >= 320 && x<= 625 && y>=600 && y<=650) { // GENERAL REGION FOR GAMEPLAY BUTTONS
+			else if(x >= 320 && x<= 625 && y>=600 && y<=710) { // GENERAL REGION FOR GAMEPLAY BUTTONS
 
 				String type = null;
 
@@ -262,6 +263,12 @@ public void drawGrid(Graphics g, int startX, int startY){
 							myGame.moveCount++;
 							System.out.println(myGame.moveCount);
 
+						}
+						
+						else if(b.type == "Rotate") {
+						    
+						    requestFocusInWindow();
+						    
 						}
 
 					}
@@ -344,14 +351,6 @@ public void drawGrid(Graphics g, int startX, int startY){
 		drawGrid(g,25,25);
 		drawGrid(g,520,25);
 
-		if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
-
-			for(Rectangle r : rects) {
-			    g.setColor(r.color);
-				g.fillRect(r.x, r.y, 45, r.height);
-			}
-
-		}
 
 		// OPENING
 
@@ -363,6 +362,14 @@ public void drawGrid(Graphics g, int startX, int startY){
 		}
 
 		// DRAW SHIPS
+	     if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+
+	            for(Rectangle r : rects) {
+	                g.setColor(r.color);
+	                g.fillRect(r.x, r.y, 45, r.height);
+	            }
+
+	        }
 
 		if(this.currentShip != null){
 
@@ -409,6 +416,10 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 	}
 
+	public void addNotify() {
+	        super.addNotify();
+	        requestFocus();
+	    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -416,7 +427,19 @@ public void drawGrid(Graphics g, int startX, int startY){
         char c=e.getKeyChar();
         System.out.println("You pressed down: " + c);
         
+        if(c=='r') {
+            int current = this.rects.size() - 1;
+            Rectangle toAdd = this.rects.get(current).rotate();
+            this.rects.remove(current);
+            this.rects.add(toAdd);
+            this.repaint(); //left off here a858
+        }
         
+        if(c=='q') {
+            System.out.println("Exiting rotate mode");
+            setEnabled(false);
+            
+        }
     }
 
 

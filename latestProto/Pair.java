@@ -85,5 +85,10 @@ public class Pair{
 
 		}
 
+		public String inGrid(Pair p) {
+		    
+		    return "A";
+		    
+		}
 
 }

@@ -8,6 +8,13 @@ public class CoordinateRange{
 		this.yrange = yrange;
 		this.filled = false;
 	}
+	
+
+    public CoordinateRange(Pair xrange,Pair yrange, boolean filled){
+        this.xrange = xrange;
+        this.yrange = yrange;
+        this.filled = filled;
+    }
 
 	public void addX (Pair xrange){
 		this.xrange= xrange;
