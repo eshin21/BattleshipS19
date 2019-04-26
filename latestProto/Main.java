@@ -6,9 +6,6 @@ import java.awt.Dimension;
 import java.util.Random;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.util.Scanner;
 
 
 ////////MAKING THE "MAIN" OBJECT/////////////////////////////////
@@ -16,22 +13,16 @@ import java.util.Scanner;
 ////////////////////////////////////////////////////////////////
 
 
-public class Main extends JPanel implements MouseListener, KeyListener{
+public class Main extends JPanel implements MouseListener{
 	public static final int BOX_WIDTH = 1024;
 	public static final int BOX_HEIGHT = 768;
 	public static CoordinateRange[][] GridA;
 	public static CoordinateRange[][] GridB;
-	public Pair point;
-
-	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>(); // keeps track of drawn rectangles
-
-	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
-	public static Button[] gameButtons = Button.makePlayButtons();
-	public static Game myGame = new Game();
-	public boolean quit = false;
-
-	public Ship currentShip;
-	public int index = 0;
+	public static Pair point;
+	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
+	ArrayList<Ship> armadaA = new ArrayList<Ship>();
+	ArrayList<Ship> armadaB = new ArrayList<Ship>();
+	
 
 	public Main(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
@@ -39,72 +30,51 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 
 
 public static void main (String[] args){
-
-		Main newMain = new Main();
-
-		if(newMain.quit == false) { // WORK IN PROGRESS, QUIT FUNCTION
-			newMain.addMouseListener(newMain);
-			newMain.addKeyListener(newMain);
-			JFrame frame = new JFrame("B A T T L E S H I P");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setContentPane(newMain);
-			frame.pack();
-			frame.setVisible(true);
-			frame.setFocusable(true);
-			myGame.play();
-		}
-
-		else {
-			newMain = new Main();
-			newMain.addMouseListener(newMain);
-			newMain.quit = false;
-			JFrame frame = new JFrame("B A T T L E S H I P");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setContentPane(newMain);
-			frame.pack();
-			frame.setVisible(true);
-			myGame.play();
-		}
-
+		JFrame frame = new JFrame("Test Window");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setContentPane(new Main());
+		frame.pack();
+		frame.setVisible(true);
 	}
 
 
 /////////SET POSITION GRIDS FOR LOCKING//////////////////////
 
 public void setPositions() {
-
+	
 	GridA = new CoordinateRange[10][10];
 	GridB = new CoordinateRange [10][10];
-
+	
 	for(int i = 0; i< 10; i++) {
-
+		
 		for(int j = 0; j<10; ++j) {
-
+			
 			Pair xrange = new Pair(25+45*i, 70+45*i);
-
+			
 			Pair yrange = new Pair(25+45*j, 70+45*j);
 			GridA[i][j] = new CoordinateRange(xrange, yrange);
-
+			
 		}
-
+		
 	}
-
+	
 	for(int i = 0; i< 10; i++) {
-
+		
 		for(int j = 0; j<10; ++j) {
-
+			
 			Pair xrange = new Pair(520+45*i, 565+45*i);
-
+			
 			Pair yrange = new Pair(25+45*j, 70+45*j);
 			GridB[i][j] = new CoordinateRange(xrange, yrange);
-
+			
 		}
-
+		
 	}
-
+	
+	
 }
 
-public void drawGrid(Graphics g, int startX, int startY){
+public void draw(Graphics g, int startX, int startY){
 			int row = 10;
 			int column = 10;
 			int rowX = startX;
@@ -112,16 +82,18 @@ public void drawGrid(Graphics g, int startX, int startY){
 			int columnX = startX;
 			int columnY = startY;
 
-			this.setPositions(); // CALL SETPOSITIONS METHOD
+			this.addMouseListener(this);
 
-			for (int r=0; r<=row; r++){ // draw grid
+			this.setPositions(); /////CALL SETPOSITIONS METHOD (generates the positions of anchor points to lock in user selections to a discrete square/////
+
+			for (int r=0; r<=row; r++){ ////draw grid
 				g.setColor(Color.WHITE);
 				g.fillRect(rowX,rowY,450,5);
 				rowY += 45;
 			}
 
 			for (int c=0; c<=column; c++){
-				if (c==10){ // adjust for gap at end
+				if (c==10){ //adjust for gap at end
 					g.setColor(Color.WHITE);
 					g.fillRect(columnX,columnY,5,455);
 				}
@@ -130,158 +102,92 @@ public void drawGrid(Graphics g, int startX, int startY){
 				columnX += 45;
 			}
 
-			for(shipButton s: myShipButtonsArray[0]) { //draw buttons for Player A ships
-
-				g.setColor(Color.RED);
-				g.fillRect(s.x, s.y, s.xdim, s.ydim);
-				g.setColor(Color.WHITE);
-
-
-
-				Graphics2D g2d = (Graphics2D) g;
-				g2d.setFont(new Font("Courier", Font.BOLD, 13));
-
-				if (s.type != "Light Cruiser"){
-					g2d.drawString(s.type, s.x, s.y-10);
-				}
-				else{
-					g2d.drawString("Light",s.x, s.y-20);
-					g2d.drawString("Cruiser",s.x, s.y-10);
-				}
-			}
-
-			for(shipButton s: myShipButtonsArray[1]) { //draw buttons for Player B ships
-
-				g.setColor(Color.GREEN);
-				g.fillRect(s.x, s.y, s.xdim, s.ydim);
-				g.setColor(Color.WHITE);
-
-				Graphics2D g2d = (Graphics2D) g;
-				g2d.setFont(new Font("Courier", Font.BOLD, 13));
-
-				if (s.type != "Light Cruiser"){
-					g2d.drawString(s.type, s.x, s.y-10);
-				}
-				else{
-					g2d.drawString("Light",s.x, s.y-20);
-					g2d.drawString("Cruiser",s.x, s.y-10);
-				}
-
-
-			}
-
-
-			for(Button b : gameButtons) {
-
-
-				g.setColor(Color.YELLOW);
-				g.fillRect(b.x, b.y, b.xdim,  b.ydim);
-				g.setColor(Color.BLACK);
-				if(b.type != "F I R E !") { // SPECIAL CASE FOR "FIRE" BUTTON
-					g.drawString(b.type, b.x+12, b.y+30);
-				}
-
-				else {
-					g.drawString(b.type, b.x+12, b.y+30);
-				}
-			}
-
-
-
 		}
 
-	public Pair findPoint (Pair point){ ////takes user click and decides what to do with this clicked point belongs to (e.g. "locking in" user input to make it correspond to its proper square, or making the point do something if it's located on a button)
-
+	public Pair findPoint (Pair point){ ////takes user click and decides which square this clicked point belongs to ("locking in" user input)
+		
 			double x = point.x;
 			double y = point.y;
 			Pair cornerPoint = new Pair(25,25);
-
-			if(x <= 475 && y <=475) { ///if click was in Grid A, call findPointA
-				cornerPoint = point.findPointA(GridA);
-			}
-			else if(x>=520 && y<=475) { ///if click was in Grid B, call findPointB
-				cornerPoint = point.findPointB(GridB);
-			}
-
-
-
-			if(x >= 25 && y<=580 && y>=550) { //check whether point falls in row of ship buttons
-
-			String type = null;
-
-				for(shipButton s: myShipButtonsArray[0]) { // buttons for Player A ships
-
-					if(s.inButton(point)) {
-						type = s.type;
-						Ship shipAdd = new Ship(point, s.length, s.length, Color.RED, 0);
-						myGame.armada_A.add(shipAdd);
-						currentShip = shipAdd;
-
-
-					}
-					cornerPoint = new Pair(s.x, s.y);
-
-				}
-
-
-				for(shipButton s : myShipButtonsArray[1]) { // buttons for Player B ships
-					if(s.inButton(point)) {
-
-						type = s.type;
-						Ship shipAdd = new Ship(point, s.length, s.length, Color.GREEN, 0);
-						myGame.armada_B.add(shipAdd);
-						currentShip = shipAdd;
-						//go do stuff: add this ship into the armada and set the currentShip field to this ship
-
-				}
-					cornerPoint = new Pair(s.x, s.y);
-			}
-				System.out.print("You've selected a " + type + " ship");
-		}
-
-
-
-			else if(x >= 320 && x<= 625 && y>=600 && y<=710) { // GENERAL REGION FOR GAMEPLAY BUTTONS
-
-				String type = null;
-
-
-				for(Button b : gameButtons) {
-					if(b.inButton(point)) {
-						type = b.type;
-						//go do stuff: make the privacy shades for "next", make a battle method for when FIRE is clicked (checkHit)
-
-						if(b.type == "Reset") {
-
-							System.out.print("Resetting the board . . .");
-							rects = new ArrayList<Rectangle>();
-
-						}
-
-						else if (b.type == "Next Turn"){
-
-							myGame.moveCount++;
-							System.out.println(myGame.moveCount);
-
-						}
-
-						else if(b.type == "Rotate") {
-
-						    requestFocusInWindow();
-
-						}
-
-					}
-
-				}
-
-				System.out.print("You've selected the " + type + " button.");
-
-			}
+			
+			if(x <= 475 && y <=475) ///if click was in Grid A, call findPointA
+				cornerPoint = findPointA(point);
+			else if(x>=520 && y<=475)///if click was in Grid B, call findPointB
+				cornerPoint = findPointB(point);
 
 			return cornerPoint;
 
 	}
+	
+	
+	///FIND ANCHOR POINT BASED ON USER CLICK IN GRID A 
+	
+	public Pair findPointA (Pair point) { 
+		
+		
+		double minX = GridA[0][0].xrange.x; ///INITIALIZATION 
+		double maxX = GridA[0][0].xrange.y;
+		double minY = GridA[0][0].yrange.x;
+		double maxY = GridA[0][0].yrange.y;
+		
+		Pair corner = new Pair(0,0);
+		
+			for(int i = 0; i<10; ++i) {
+				
+				for(int j = 0; j<10; ++j) {
+					minX = GridA[i][j].xrange.x;
+					maxX = GridA[i][j].xrange.y;
+					minY = GridA[i][j].yrange.x;
+					maxY = GridA[i][j].yrange.y;
+					if(point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY )
+						corner = new Pair(minX, minY);
+					
+				}
+				
+			}
+			
+			
+			return corner;
+		
+			
+}
+
+	///FIND ANCHOR POINT BASED ON USER CLICK IN GRID B 
+	
+	public Pair findPointB (Pair point) { 
+		
+		
+
+		double minX = GridB[0][0].xrange.x;
+		double maxX = GridB[0][0].xrange.y;
+		double minY = GridB[0][0].yrange.x;
+		double maxY = GridB[0][0].yrange.y;
+	
+	
+		Pair corner = new Pair(0,0);
+		
+			for(int i = 0; i<10; ++i) {
+				
+				for(int j = 0; j<10; ++j) {	
+					
+					minX = GridB[i][j].xrange.x;
+					maxX = GridB[i][j].xrange.y;
+					minY = GridB[i][j].yrange.x;
+					maxY = GridB[i][j].yrange.y;
+					if(point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY )
+						corner = new Pair(minX, minY);
+					
+				}
+				
+				
+			}
+			
+			
+			return corner;
+		
+			
+}
+
 
 	@Override
 	 public void mouseClicked(MouseEvent e) {
@@ -290,19 +196,17 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 		 this.point = new Pair(e.getX(), e.getY());
 		 System.out.println("You clicked "  + this.point);
-		 findPoint(this.point); //now take this point and go do stuff with it
 		 this.repaint();
-
+		
 	  }
-
-	 }
+		 
+	  }
 
 ///////////IGNORE THESE : NECESSARY FOR COMPILING
 
 	@Override
 	 	public void mouseEntered(MouseEvent e){
 	  // TODO Auto-generated method stub
-
 
 	 }
 
@@ -323,138 +227,69 @@ public void drawGrid(Graphics g, int startX, int startY){
 	  // TODO Auto-generated method stub
 
 	 }
-
+	 
 /////////////////////////////END IGNORE
-
-
+	 
+	 
+	 
+//WAS TOLD FROM https://stackoverflow.com/questions/13549506/drawing-a-shape-but-keeping-the-most-previous-shape-on-screen-in-java THAT UPDATE METHOD COULD BE USED FOR PRESERVING SQUARES WHEN REPAINTING, BUT THIS WAS UNNECESS.
+//	@Override
+//	public void update(Graphics g) {
+//		
+//		paint(g);
+//		
+//	}
+	 
 
 	@Override
-	public void update(Graphics g) { // currently not used
-
-		paintComponent(g);
-
-	}
-
-
-	@Override //default method that will run as part of graphics
-
 	public void paintComponent(Graphics g) {
-
+		
 		super.paintComponent(g);
 		g.setColor(Color.BLACK); // sets background color
 		g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
 
-		g.setColor(Color.ORANGE);
-		g.fillRect(0,0,BOX_WIDTH,25);
-
-		// draw grids
-		drawGrid(g,25,25);
-		drawGrid(g,520,25);
-
-
-		// OPENING
-
-		if (myGame.moveCount==0){
-			Graphics2D g2d = (Graphics2D) g;
-			g.setColor(Color.BLUE);
-			g2d.setFont(new Font("Courier", Font.BOLD, 13));
-			g2d.drawString("WELCOME TO BATTLESHIP. You've started a new game. To START, PLAYER 1, press the NEXT TURN button.", 30, 17);
-		}
-
-		// DRAW SHIPS
-	  if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
-	            for(Rectangle r : rects) {
-	                g.setColor(r.color);
-	                g.fillRect(r.x, r.y, 45, r.height);
-	            }
-	  }
-
-		if(this.currentShip != null){
-
-			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
-				    g.setColor(Color.RED);
-				    this.currentShip.placeShip(this, g, Color.RED);
-
+		draw(g,25,25);
+		draw(g,520,25);
+		 
+		if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+			for(Rectangle r : rects) {	
+				g.setColor(r.color);
+				g.fillRect(r.x, r.y, 45, 45);
 			}
-
-			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
-				g.setColor(Color.GREEN);
-		    this.currentShip.placeShip(this, g, Color.GREEN);
-			}
-
 		}
 
-		// DRAWS BLACK BOX OVER NON-PLAYER'S BOARD
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setFont(new Font("Courier", Font.BOLD, 13));
+		if(this.point != null && this.point.x >= 25 && this.point.y <= 475) {
 
-		if (myGame.moveCount==1){ // first player places ships
-			g.setColor(Color.BLACK);
-			g.fillRect(520,25,470,470);
-			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 1, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 17);
+
+			g.setColor(Color.RED); //set color
+			Pair corner = this.findPoint(this.point); //find corner 
+			System.out.println("The key corner is " + corner); 
+			Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,45, Color.RED); //make new rectangle based on this corner
+			rects.add(add); //add to arraylist of rectangles
+			
+			
+			g.fillRect((int)corner.x, (int)corner.y, 45, 45); //somehow necessary--otherwise it won't draw until the next click
+
 		}
-		else if (myGame.moveCount==2){ // 2nd player places ships
-			g.setColor(Color.BLACK);
-			g.fillRect(25,25,470,470);
-			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 17);
+
+		if(this.point != null && this.point.x >= 520 && this.point.y <= 475) {
+
+
+			g.setColor(Color.GREEN);
+			
+			Pair corner = this.findPoint(this.point);
+			
+			System.out.println("The key corner is " + corner);
+			
+			Rectangle add = new Rectangle((int)corner.x, (int)corner.y,45,45, Color.GREEN);
+			rects.add(add);
+			
+			
+			g.fillRect((int)corner.x, (int)corner.y, 45, 45); //necessary
+
 		}
-		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(1st player)
-			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 1, choose your move.", 30, 17);
-			g.setColor(Color.BLACK);
-			g.fillRect(520,25,470,470);
-			drawGrid(g,520,25);
-		}
-		else { // 2nd player
-			g.setColor(Color.BLACK);
-			g.fillRect(25,25,470,470);
-			drawGrid(g,25,25);
-			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 1, choose your move.", 500, 17);
-		}
+
 
 	}
-
-	public void addNotify() {
-	        super.addNotify();
-	        requestFocus();
-	    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-        char c=e.getKeyChar();
-        System.out.println("You pressed down: " + c);
-
-        if(c=='r') {
-            int current = this.rects.size() - 1;
-            Rectangle toAdd = this.rects.get(current).rotate();
-            this.rects.remove(current);
-            this.rects.add(toAdd);
-            this.repaint(); //left off here a858
-        }
-
-        if(c=='q') {
-            System.out.println("Exiting rotate mode");
-            setEnabled(false);
-
-        }
-    }
-
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-    }
 
 }
