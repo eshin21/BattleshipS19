@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import java.util.Random;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.Scanner;
@@ -23,7 +23,6 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public static CoordinateRange[][] GridB;
 	public Pair point;
 
-	public ArrayList<Rectangle> rects = new ArrayList<Rectangle>(); // keeps track of drawn rectangles
 	
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
 	public static Button[] gameButtons = Button.makePlayButtons();
@@ -31,7 +30,8 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public boolean quit = false;
 	
 	public Ship currentShip;
-	public int index = 0;
+	public int indexA = -1;
+	public int indexB = -1;
 
 	public Main(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
@@ -213,12 +213,12 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 					if(s.inButton(point)) {
 						type = s.type;
-						Ship shipAdd = new Ship(point, s.length, s.length, Color.RED, 0);
-						myGame.armada_A.add(shipAdd);
+						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.RED, "A");
 						currentShip = shipAdd;
 
 
 					}
+					
 					cornerPoint = new Pair(s.x, s.y);
 
 				}
@@ -228,10 +228,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 					if(s.inButton(point)) {
 
 						type = s.type;
-						Ship shipAdd = new Ship(point, s.length, s.length, Color.GREEN, 0);
-						myGame.armada_B.add(shipAdd);
+						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.GREEN, "B");
 						currentShip = shipAdd;
-						//go do stuff: add this ship into the armada and set the currentShip field to this ship
 
 				}
 					cornerPoint = new Pair(s.x, s.y);
@@ -241,23 +239,29 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 
 
-			else if(x >= 320 && x<= 625 && y>=600 && y<=710) { // GENERAL REGION FOR GAMEPLAY BUTTONS
+			else if(x >= 200 && x<= 635 && y>=600 && y<=710) { // GENERAL REGION FOR GAMEPLAY BUTTONS
 
 				String type = null;
-
-
 				for(Button b : gameButtons) {
 					if(b.inButton(point)) {
 						type = b.type;
 						//go do stuff: make the privacy shades for "next", make a battle method for when FIRE is clicked (checkHit)
 
-						if(b.type == "Reset") {
+						if(b.type == "Reset A") {
 
-							System.out.print("Resetting the board . . .");
-							rects = new ArrayList<Rectangle>();
+							System.out.print("Resetting Player A's board . . .");
+							
+							myGame.armada_A = new LinkedList<Ship>();
 
 						}
 
+						if(b.type == "Reset B") {
+
+                            System.out.print("Resetting Player B's board . . .");
+                            myGame.armada_B = new LinkedList<Ship>();
+
+                        }
+						
 						else if (b.type == "Next Turn"){
 
 							myGame.moveCount++;
@@ -267,7 +271,15 @@ public void drawGrid(Graphics g, int startX, int startY){
 						
 						else if(b.type == "Rotate") {
 						    
+						    System.out.println("You've selected the Rotate button. Press 'r' to rotate your last placed ship, and 'q' to exit rotate mode.");
+						    setEnabled(true);
 						    requestFocusInWindow();
+						    
+						}
+						
+						else if (b.type == "Erase") {
+						    System.out.println("You've selected Erase to erase your last placed ship. Click anywhere to place that ship again.");
+						    
 						    
 						}
 
@@ -275,7 +287,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 				}
 
-				System.out.print("You've selected the " + type + " button.");
+				System.out.println("You've selected the " + type + " button.");
 
 			}
 
@@ -362,15 +374,31 @@ public void drawGrid(Graphics g, int startX, int startY){
 		}
 
 		// DRAW SHIPS
-	     if(rects != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+	     if(myGame.armada_A != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
 
-	            for(Rectangle r : rects) {
-	                g.setColor(r.color);
-	                g.fillRect(r.x, r.y, 45, r.height);
+	            for(Ship s: myGame.armada_A) {
+	                
+	                System.out.println("This ship is " + s);
+	                g.setColor(s.color);
+	                
+	                g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
+	                
 	            }
 
 	        }
 
+	     if(myGame.armada_B != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+
+             for(Ship s: myGame.armada_B) {
+                 g.setColor(s.color);
+                 g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
+                 
+             }
+
+         }
+
+     
+	     
 		if(this.currentShip != null){
 
 			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
@@ -426,21 +454,71 @@ public void drawGrid(Graphics g, int startX, int startY){
 
         char c=e.getKeyChar();
         System.out.println("You pressed down: " + c);
-        
-        if(c=='r') {
-            int current = this.rects.size() - 1;
-            Rectangle toAdd = this.rects.get(current).rotate();
-            this.rects.remove(current);
-            this.rects.add(toAdd);
-            this.repaint(); //left off here a858
-        }
-        
+
         if(c=='q') {
             System.out.println("Exiting rotate mode");
-            setEnabled(false);
+          setEnabled(false);
+
+            
+            
+        }
+        if(c=='r') {
+
+            if(this.currentShip.player == "A") {
+
+                Ship toRotate = myGame.armada_A.removeLast();
+                myGame.armada_A.addLast(toRotate.rotate());
+                for(Ship s : myGame.armada_A) {
+                    
+                    System.out.println(s);
+                    
+                }
+                setEnabled(false);
+                this.repaint();
+            }
+            
+            if(this.currentShip.player == "B") {
+                int index = myGame.armada_B.size()-1;
+                Ship toRotate = myGame.armada_B.get(index);
+                myGame.armada_B.remove(index);
+                toRotate = toRotate.rotate();
+                myGame.armada_B.add(toRotate);
+                setEnabled(false);
+                this.repaint();
+            }
             
         }
     }
+            
+//            Ship toRotate = this.rects.get(current);
+            
+            
+            
+//            if(toRotate.color == Color.RED) {
+//                this.myGame.armada_A.remove(current);
+//                System.out.println("Armada B is now  comprised of" + this.myGame.armada_A);
+//            }
+//            
+//            else if(toRotate.color == Color.GREEN) {
+//                this.myGame.armada_B.remove(current);
+//                System.out.println("Armada B is now comprised of " + myGame.armada_B);
+//            }
+//            
+//            
+//            System.out.println(toRotate);
+//            
+//            Rectangle toAdd = toRotate.rotate();
+//            this.rects.remove(current);
+//            this.rects.add(toAdd);
+//            this.repaint(); 
+//        }
+//        
+//        if(c=='q') {
+//            System.out.println("Exiting rotate mode");
+//            setEnabled(false);
+//            
+////        }
+//    }
 
 
     @Override

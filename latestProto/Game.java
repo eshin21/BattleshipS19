@@ -1,14 +1,6 @@
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.util.Random;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
+
 
 
 ///////////////////GAME CLASS: MANAGES SHIP ARRAYS, MOVE COUNT, CHECKS GAME OVER, HIT/MISS 
@@ -20,8 +12,8 @@ public class Game{
 	public boolean gameOver; //need to keep track of when game stops
 	public int playerA_status;
 	public int playerB_status;
-	public ArrayList<Ship> armada_A = new ArrayList <Ship>(5);
-	public ArrayList<Ship> armada_B = new ArrayList <Ship>(5);
+	public LinkedList<Ship> armada_A = new LinkedList<Ship>();
+	public LinkedList<Ship> armada_B = new LinkedList<Ship>();
 
 
 	public Game() {
