@@ -26,10 +26,12 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
 	public static Button[] gameButtons = Button.makePlayButtons();
-	public static Game myGame = new Game();
+	private static Game myGame = new Game();
 	public boolean quit = false;
 	
-	public Ship currentShip;
+	public Ship currentShipA;
+	public Ship currentShipB;
+	public Ship currentShipGen;
 	public int indexA = -1;
 	public int indexB = -1;
 
@@ -52,7 +54,7 @@ public static void main (String[] args){
 			frame.pack();
 			frame.setVisible(true);
 			frame.setFocusable(true);
-			myGame.play();
+			getMyGame().play();
 		}
 
 		else {
@@ -66,7 +68,7 @@ public static void main (String[] args){
 			frame.setContentPane(newMain);
 			frame.pack();
 			frame.setVisible(true);
-			myGame.play();
+			getMyGame().play();
 		}
 
 	}
@@ -217,7 +219,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 					if(s.inButton(point)) {
 						type = s.type;
 						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.RED, "A");
-						currentShip = shipAdd;
+						currentShipGen = shipAdd;
+						currentShipA = shipAdd;
 
 
 					}
@@ -232,7 +235,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 						type = s.type;
 						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.GREEN, "B");
-						currentShip = shipAdd;
+						currentShipGen = shipAdd;
+						currentShipB = shipAdd;
 
 				}
 					cornerPoint = new Pair(s.x, s.y);
@@ -254,21 +258,21 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 							System.out.print("Resetting Player A's board . . .");
 							
-							myGame.armada_A = new LinkedList<Ship>();
+							getMyGame().armada_A = new LinkedList<Ship>();
 
 						}
 
 						if(b.type == "Reset B") {
 
                             System.out.print("Resetting Player B's board . . .");
-                            myGame.armada_B = new LinkedList<Ship>();
+                            getMyGame().armada_B = new LinkedList<Ship>();
 
                         }
 						
 						else if (b.type == "Next Turn"){
 
-							myGame.moveCount++;
-							System.out.println(myGame.moveCount);
+							getMyGame().moveCount++;
+							System.out.println(getMyGame().moveCount);
 
 						}
 						
@@ -282,16 +286,15 @@ public void drawGrid(Graphics g, int startX, int startY){
 						
 						else if (b.type == "Erase") {
 						    System.out.println("Erasing your last placed ship.");
-						    if(this.currentShip != null) {
 						        
-						        if(this.currentShip.player == "A") {
-						           myGame.armada_A.removeLast();
+						        if(this.currentShipGen.player == "A") {
+						           getMyGame().armada_A.removeLast();
 						           repaint();
 						            
 						        }
 						        
-						        else if( this.currentShip.player == "B") {
-	                                   myGame.armada_B.removeLast();
+						        else if( this.currentShipGen.player == "B") {
+	                                   getMyGame().armada_B.removeLast();
 	                                   repaint();
 	                                    
 	                                }
@@ -301,7 +304,6 @@ public void drawGrid(Graphics g, int startX, int startY){
 						    }
 						    
 						    
-						}
 
 					}
 
@@ -321,8 +323,11 @@ public void drawGrid(Graphics g, int startX, int startY){
 	  if(e.getButton() == 1){
 
 		 this.point = new Pair(e.getX(), e.getY());
-		 System.out.println("You clicked "  + this.point);
-		 findPoint(this.point); //now take this point and go do stuff with it
+		 
+		 Pair corner = findPoint(this.point); //now take this point and go do stuff with it
+		 
+		 System.out.println("You clicked "  + this.point + ", aka the cornerPoint " + corner);
+		 
 		 this.repaint();
 
 	  }
@@ -375,7 +380,6 @@ public void drawGrid(Graphics g, int startX, int startY){
 		super.paintComponent(g);
 		g.setColor(Color.BLACK); // sets background color
 		g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
-
 		g.setColor(Color.ORANGE);
 		g.fillRect(0,0,BOX_WIDTH,25);
 
@@ -394,45 +398,40 @@ public void drawGrid(Graphics g, int startX, int startY){
 		}
 
 		// DRAW SHIPS
-	     if(myGame.armada_A != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
-
+	     if(myGame.armada_A != null) { //NEED TO MAKE ARRAYLIST OF SHIPS SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
 	            for(Ship s: myGame.armada_A) {
-	                
-	                System.out.println("This ship is " + s);
-	                g.setColor(s.color);
-	                
+	                System.out.println("Armada A contains " + s);
+	                g.setColor(Color.RED);
 	                g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
 	                
 	            }
 
 	        }
 
-	     if(myGame.armada_B != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
-
+	     if(myGame.armada_B != null) { 
              for(Ship s: myGame.armada_B) {
-                 g.setColor(s.color);
+                 System.out.println("Armada B contains " + s);
+                 g.setColor(Color.GREEN);
                  g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
-                 
+
              }
 
          }
 
      
 	     
-		if(this.currentShip != null){
 
-			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
+			if(this.currentShipA != null && this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
 			    g.setColor(Color.RED);
-			    this.currentShip.placeShip(this, g, Color.RED);
+			    this.currentShipA.placeShip(this, g, Color.RED);
 
 			}
 
-			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
+			if(this.currentShipB != null && this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
 			    g.setColor(Color.GREEN);
-	             this.currentShip.placeShip(this, g, Color.GREEN);
+	             this.currentShipB.placeShip(this, g, Color.GREEN);
 		}
 
-	}
 
 		// DRAWS BLACK BOX OVER NON-PLAYER'S BOARD
 		Graphics2D g2d = (Graphics2D) g;
@@ -484,11 +483,11 @@ public void drawGrid(Graphics g, int startX, int startY){
         }
         if(c=='r') {
 
-            if(currentShip != null && this.currentShip.player == "A") {
+            if(currentShipA != null) {
 
-                Ship toRotate = myGame.armada_A.removeLast();
-                myGame.armada_A.addLast(toRotate.rotate());
-                for(Ship s : myGame.armada_A) {
+                Ship toRotate = getMyGame().armada_A.removeLast();
+                getMyGame().armada_A.addLast(toRotate.rotate(this));
+                for(Ship s : getMyGame().armada_A) {
                     
                     System.out.println(s);
                     
@@ -497,15 +496,12 @@ public void drawGrid(Graphics g, int startX, int startY){
                 this.repaint();
             }
             
-            if(currentShip != null && this.currentShip.player == "B") {
+            if(currentShipB != null) {
 
-                Ship toRotate = myGame.armada_B.removeLast();
-                myGame.armada_B.addLast(toRotate.rotate());
-                
-                for(Ship s : myGame.armada_B) {
-                    
+                Ship toRotate = getMyGame().armada_B.removeLast();
+                getMyGame().armada_B.addLast(toRotate.rotate(this));
+                for(Ship s : getMyGame().armada_B) {
                     System.out.println(s);
-                    
                 }
                 setEnabled(false);
                 this.repaint();
@@ -525,6 +521,16 @@ public void drawGrid(Graphics g, int startX, int startY){
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
         
+    }
+
+
+    public static Game getMyGame() {
+        return myGame;
+    }
+
+
+    public static void setMyGame(Game myGame) {
+        Main.myGame = myGame;
     }
 
 }

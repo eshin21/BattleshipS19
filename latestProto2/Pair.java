@@ -90,5 +90,16 @@ public class Pair{
 		    return "A";
 		    
 		}
+		
+		public boolean equals(Pair p) {
+		    
+		    
+		    if(this.x == p.x && this.y==p.y)
+		        return true;
+		    else 
+		        return false;
+		    
+		    
+		}
 
 }

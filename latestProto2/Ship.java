@@ -1,121 +1,131 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /////////////////////////////
 // Enumerates ship.
 ////////////////////////////
 
 public class Ship{
-    
     String type;
-	Pair position; //locked position of anchor rectangle
-	
-	int xdim; 
-	int ydim;
-	
-	int health;
-	Color color;
-	
-	String player; //denotes which player this ship belongs to
-
-	public Ship(String type, Pair p, int xdim, int ydim, Color color, String player){
-
-	    this.type = type;
-		this.position = p;
-		this.xdim= xdim;
-		this.ydim= ydim;
-		this.color = color;
-		this.player = player;
-		
-		}
-	
-	
-
-    	
-    public void placeShip(Main m, Graphics g, Color c) {
+    Pair position; //locked position of anchor point from which we draw the ship's rectangle
+    int xdim; 
+    int ydim;
+    int health;
+    Color color;
+    String player; //denotes which player this ship belongs to, "A" or "B"
+    
+    public Ship(String type, Pair p, int xdim, int ydim, Color color, String player){
+        this.type = type;
+        this.position = p;
+        this.xdim= xdim;
+        this.ydim= ydim;
+        this.color = color;
+        this.player = player;
+        }
+    
         
+    public void placeShip(Main m, Graphics g, Color c) {
         Pair corner = m.findPoint(m.point);
         System.out.println("The key corner is " + corner);
-        Ship ship = m.currentShip;
-
-        if(corner.x <= 475 && corner.y <=475) { ///if click was in Grid A, call findPointA
-            placeShipA(g, ship, m, c);
+        Ship shipA = m.currentShipA;
+        Ship shipB = m.currentShipB;
+        if(corner.x <= 475 && corner.y <=475) { ///if click was in Grid A, call placeShipA
+            placeShipA(g, shipA, m, c);
         }
-        else if(corner.x>=520 && corner.y<=475) { ///if click was in Grid B, call findPointB
-            placeShipB(g, ship, m, c);
+        else if(corner.x>=520 && corner.y<=475) { ///if click was in Grid B, call placeShipB
+            placeShipB(g, shipB, m, c);
         }
-        
-        
-       
         
     }
-    	
+        
 
     public void placeShipA (Graphics g, Ship s, Main m, Color c) {
         
         Pair corner = m.findPoint(m.point);
+        Ship add = new Ship(this.type, corner, s.xdim, s.ydim, c, s.player); //make new ship based on this corner
         
-        Ship add = new Ship(this.type, corner, s.xdim, s.ydim, c, s.player); //make new rectangle based on this corner
+        /////////////check if this ship overlaps anything and then verify that it's in bounds
         
-        if(add.checkEdge(corner).equals(add)) {                 ///EDGE AWARENESS: ADD IT ONLY IF THE COORDINATE & LENGTH ARE COMPATIBLE
-            g.setColor(c);
-            Main.myGame.armada_A.add(add); //add to arraylist of ships    
-            m.indexA++;
-            g.fillRect((int)corner.x, (int)corner.y,xdim,ydim); // necessary--otherwise it won't draw until the next click
+        if(!s.checkArmadaOverlap() && add.checkEdge(corner, m).equals(add)) {
+                g.setColor(c);
+                Main.getMyGame().armada_A.add(add); //add to arraylist of ships    
+                m.indexA++;
+                g.fillRect((int)corner.x, (int)corner.y,xdim,ydim); // necessary--otherwise it won't draw until the next click
 
-        }
-        else { 
-            g.setColor(c);
-            Ship adj = add.checkEdge(corner);
-            m.myGame.armada_A.add(adj);
-            m.indexA++;
-            g.fillRect((int)adj.position.x, (int)adj.position.y, adj.xdim, adj.ydim);
+            }
+        
+        else if(!add.checkEdge(corner, m).equals(add) && !add.checkEdge(corner, m).checkArmadaOverlap()) { 
             
+                g.setColor(c);
+                Ship adj = add.checkEdge(corner, m);
+                Main.getMyGame().armada_A.add(adj);
+                m.indexA++;
+                g.fillRect((int)adj.position.x, (int)adj.position.y, adj.xdim, adj.ydim);
+
+       }
+            
+        else {
+            System.out.println("******Sorry, Player A, you can't place a ship here. Try again.");
         }
+            
+        
+        
     }
+
+        
+    
     
     public void placeShipB (Graphics g, Ship s, Main m, Color c) {
 
         Pair corner = m.findPoint(m.point);
+        Ship add = new Ship(this.type, corner, s.xdim, s.ydim, c, s.player); //make new ship based on this corner
         
-        Ship add = new Ship(this.type, corner, s.xdim, s.ydim, c, s.player); //make new rectangle based on this corner
+        /////////////check if this ship overlaps anything and then verify that it's in bounds
         
-        if(add.checkEdge(corner).equals(add)) {                 ///EDGE AWARENESS: ADD IT ONLY IF THE COORDINATE & LENGTH ARE COMPATIBLE
-            g.setColor(c);
-            m.myGame.armada_B.add(add); //add to arraylist of rectangles    
-            m.indexB++;
-            g.fillRect((int)corner.x, (int)corner.y,xdim,ydim); // necessary--otherwise it won't draw until the next click
+        if(!s.checkArmadaOverlap() && add.checkEdge(corner, m).equals(add)) {
+                g.setColor(Color.GREEN);
+                Main.getMyGame().armada_B.add(add); //add to arraylist of ships    
+                m.indexB++;
+                g.fillRect((int)corner.x, (int)corner.y,xdim,ydim); // necessary--otherwise it won't draw until the next click
 
-        }
-        else { 
-            g.setColor(c);
-            Ship adj = add.checkEdge(corner);
-            m.myGame.armada_B.add(adj);
-            m.indexB++;
-            g.fillRect((int)adj.position.x, (int)adj.position.y, adj.xdim, adj.ydim);
+            }
+        
+        else if(!add.checkEdge(corner, m).equals(add) && !add.checkEdge(corner, m).checkArmadaOverlap()) { 
             
+                g.setColor(Color.GREEN);
+                Ship adj = add.checkEdge(corner, m);
+                Main.getMyGame().armada_B.add(adj);
+                m.indexB++;
+                g.fillRect((int)adj.position.x, (int)adj.position.y, adj.xdim, adj.ydim);
+
+       }
+            
+        else {
+            System.out.println("Sorry, Player B, you can't place a ship here. Try again.");
         }
-                   
+            
         
         
     }
 
-    public Ship checkEdge(Pair p) {
         
-        if(p.y + this.ydim <= 475 && p.x + this.xdim <= 475 && p.x - this.xdim>=25-45 ||  p.y + this.ydim <= 475 && p.x + this.xdim <= 975 && p.x - this.xdim >=520-45) {
-           
+
+        
+
+    public Ship checkEdge(Pair p, Main m) { //check if OOB
+        
+        if(p.y + this.ydim <= 475 && p.x + this.xdim <= 475 && p.x - this.xdim>=25-45 ||  p.y + this.ydim <= 475 && p.x + this.xdim <= 975 && p.x - this.xdim >=520-45) {       
            return this; 
-            
         }
         
         
-        else if(p.y <= 475 && p.x<=475 && p.x >= 25 || p.y <= 475 && p.x>= 520&& p.x <= 975) {
+        else{
             return measureOver(p);
         }
         
-        else
-            return null;
+        
         
     }
     
@@ -181,13 +191,13 @@ public class Ship{
     
     public String toString() {
         
-        String myPrint = ("This is a " + this.type + " ship at " + this.position );
+        String myPrint = ( this.type + " ship at " + this.position );
         return myPrint;
         
         
     }
     
-    public Ship rotate() { //rotate clockwise 90 deg
+    public Ship rotate(Main m) { //rotate clockwise 90 deg
         
         
         Pair adjPoint = new Pair(this.position.x - (this.ydim - 45) , this.position.y);
@@ -198,11 +208,11 @@ public class Ship{
         
         Pair anchor = new Pair(this.position.x, this.position.y);
         
-        if(!this.needsAdj())
+        if(!this.needsAdj(m))
             return toReturn;
         else {
             
-            toReturn = this.checkEdge(anchor);
+            toReturn = this.checkEdge(anchor, m);
             return toReturn;
         }
           
@@ -210,10 +220,11 @@ public class Ship{
         
     }
     
-    public boolean needsAdj() {
+    public boolean needsAdj(Main m) {
 
         
-        if(this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 475 && this.position.x - this.xdim>=25-45 && !this.isOverlap() ||  this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 975 && this.position.x - this.xdim >=520-45 && !this.isOverlap()) {
+        //if it's in bounds and also if there's no overlap
+        if(this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 475 && this.position.x - this.xdim>=25-45 && !this.checkArmadaOverlap() ||  this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 975 && this.position.x - this.xdim >=520-45 && !this.checkArmadaOverlap()) {
             return false;
                     
         }
@@ -222,13 +233,108 @@ public class Ship{
         
     }
     
-    public boolean isOverlap() {
+    public boolean isOverlap(Ship s) {
+        
+        ArrayList<Pair> s_coord = s.givePoints();
+        ArrayList<Pair> this_coord = this.givePoints();
+
+            
+        //compare each Pair in one ship to all the other Pairs of the other ship.
+        
+            for(int i = 0; i< this_coord.size(); ++i) {
+                
+                Pair compare = this_coord.get(i);
+                
+                for(int j= 0; j<s_coord.size(); ++j) {
+                    
+                    if(compare.equals(s_coord.get(j)))
+                        return true;
+                    
+                }
+                    
         
         
-        return false;
+            }
+            
+            return false;
+            
+    }
+    
+    public boolean isHoriz() {
+        
+        if(this.xdim > this.ydim) {
+            
+            return true;
+        }
+        
+        else
+            return false;
+    
+    }
+    
+    public ArrayList<Pair> givePoints(){ //give me the key corners comprising this ship
+        
+       
+        ArrayList<Pair> corners = new ArrayList<Pair>();
+
+        int slength=0;
+
+        if(this.isHoriz()) {
+            
+            slength = this.xdim/45;
+          
+            for(int i = 0; i<slength; ++i) {
+                Pair toAdd = new Pair(this.position.x + 45*i, this.position.y); 
+                corners.add(toAdd);
+            }
+        }
+
+        else if(!this.isHoriz()) {
+            slength = this.ydim/45;
+            for(int i = 0; i<slength; ++i) {
+                Pair toAdd = new Pair(this.position.x, this.position.y+ 45*i); 
+                corners.add(toAdd);
+            }
+
+        }
+            
+        return corners;
         
     }
     
     
+    public boolean checkArmadaOverlap() {
+        
+        
+        if(this.player=="A") {
+            for(Ship a : Main.getMyGame().armada_A) {
+           
+                if(this.isOverlap(a)) {
+                    System.out.println("****A: Sorry, you can't place a ship here due to overlap. Try again");
+                    return true;
+                }
+            
+            
+            }
+        }
+        
+        else if (this.player=="B") {
+            
+                for(Ship b: Main.getMyGame().armada_B) {
+            
+                if(this.isOverlap(b)) {
+                    System.out.println("***B: Sorry, you can't place a ship here due to overlap. Try again");
+                    return true;
+                }
+            
+            
+                }
+            }
+       
+        
+        return false;
+        
+        
+    }
 
 }
