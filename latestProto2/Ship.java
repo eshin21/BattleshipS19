@@ -26,39 +26,40 @@ public class Ship{
         }
     
         
-    public void placeShip(Main m, Graphics g, Color c) {
-        Pair corner = m.findPoint(m.point);
-        System.out.println("The key corner is " + corner);
-        Ship shipA = m.currentShipA;
-        Ship shipB = m.currentShipB;
-        if(corner.x <= 475 && corner.y <=475) { ///if click was in Grid A, call placeShipA
-            placeShipA(g, shipA, m, c);
-        }
-        else if(corner.x>=520 && corner.y<=475) { ///if click was in Grid B, call placeShipB
-            placeShipB(g, shipB, m, c);
-        }
-        
-    }
-        
-
+//    public void placeShip(Main m, Graphics g, Color c) {
+//        Pair corner = m.findPoint(m.point);
+//        System.out.println("The key corner is " + corner);
+//        Ship shipA = m.currentShipA;
+//        Ship shipB = m.currentShipB;
+//        if(corner.x <= 475 && corner.y <=475) { ///if click was in Grid A, call placeShipA
+//            placeShipA(g, shipA, m, c);
+//        }
+//        else if(corner.x>=520 && corner.y<=475) { ///if click was in Grid B, call placeShipB
+//            placeShipB(g, shipB, m, c);
+//        }
+//        
+//    }
+//        
+   
+    
     public void placeShipA (Graphics g, Ship s, Main m, Color c) {
-        
+
         Pair corner = m.findPoint(m.point);
         Ship add = new Ship(this.type, corner, s.xdim, s.ydim, c, s.player); //make new ship based on this corner
         
         /////////////check if this ship overlaps anything and then verify that it's in bounds
         
-        if(!s.checkArmadaOverlap() && add.checkEdge(corner, m).equals(add)) {
-                g.setColor(c);
+        if(!s.checkArmadaOverlap() && !add.isOOB(corner)) {
+                g.setColor(Color.RED);
                 Main.getMyGame().armada_A.add(add); //add to arraylist of ships    
                 m.indexA++;
                 g.fillRect((int)corner.x, (int)corner.y,xdim,ydim); // necessary--otherwise it won't draw until the next click
 
             }
         
-        else if(!add.checkEdge(corner, m).equals(add) && !add.checkEdge(corner, m).checkArmadaOverlap()) { 
+        else if(!add.checkEdge(corner, m).checkArmadaOverlap()) { 
             
-                g.setColor(c);
+                g.setColor(Color.RED);
                 Ship adj = add.checkEdge(corner, m);
                 Main.getMyGame().armada_A.add(adj);
                 m.indexA++;
@@ -67,7 +68,7 @@ public class Ship{
        }
             
         else {
-            System.out.println("******Sorry, Player A, you can't place a ship here. Try again.");
+            System.out.println("Sorry, Player B, you can't place a ship here. Try again.");
         }
             
         
@@ -84,7 +85,7 @@ public class Ship{
         
         /////////////check if this ship overlaps anything and then verify that it's in bounds
         
-        if(!s.checkArmadaOverlap() && add.checkEdge(corner, m).equals(add)) {
+        if(!s.checkArmadaOverlap() && !add.isOOB(corner)) {
                 g.setColor(Color.GREEN);
                 Main.getMyGame().armada_B.add(add); //add to arraylist of ships    
                 m.indexB++;
@@ -92,7 +93,7 @@ public class Ship{
 
             }
         
-        else if(!add.checkEdge(corner, m).equals(add) && !add.checkEdge(corner, m).checkArmadaOverlap()) { 
+        else if(!add.checkEdge(corner, m).checkArmadaOverlap()) { 
             
                 g.setColor(Color.GREEN);
                 Ship adj = add.checkEdge(corner, m);
@@ -111,7 +112,21 @@ public class Ship{
     }
 
         
-
+    public boolean isOOB(Pair p) {
+    	
+    	   
+        if(p.y + this.ydim <= 475 && p.x + this.xdim <= 475 && p.x - this.xdim>=25-45 ||  p.y + this.ydim <= 475 && p.x + this.xdim <= 975 && p.x - this.xdim >=520-45) {       
+           return false; 
+        }
+        
+        
+        else{
+            return true;
+        }
+        
+        
+    	
+    }
         
 
     public Ship checkEdge(Pair p, Main m) { //check if OOB
@@ -141,7 +156,7 @@ public class Ship{
             
            toReturn = new Ship(this.type, adjPair, this.xdim, this.ydim, this.color, this.player);
            
-           System.out.println("The ship went off the bottom. I recorrected this to shift up by " + excess/45 + " squares.");
+           System.out.println("The ship went off the bottom. I made a new ship at " + adjPair + " and recorrected this to shift up by " + excess/45 + " squares.");
             
         }
 
@@ -208,23 +223,20 @@ public class Ship{
         
         Pair anchor = new Pair(this.position.x, this.position.y);
         
-        if(!this.needsAdj(m))
+        if(!toReturn.needsAdj(m))
             return toReturn;
-        else {
-            
+        else{
             toReturn = this.checkEdge(anchor, m);
             return toReturn;
         }
-          
-        
         
     }
     
     public boolean needsAdj(Main m) {
 
-        
-        //if it's in bounds and also if there's no overlap
-        if(this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 475 && this.position.x - this.xdim>=25-45 && !this.checkArmadaOverlap() ||  this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 975 && this.position.x - this.xdim >=520-45 && !this.checkArmadaOverlap()) {
+        System.out.println("The needsAdj method ran");
+        //if it's in bounds 
+        if(this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 475 && this.position.x - this.xdim>=25-45  ||  this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 975 && this.position.x - this.xdim >=520-45 ) {
             return false;
                     
         }

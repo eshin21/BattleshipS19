@@ -21,19 +21,21 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public static final int BOX_HEIGHT = 768;
 	public static CoordinateRange[][] GridA;
 	public static CoordinateRange[][] GridB;
-	public Pair point;
 
-	
+	public Pair point;
+	public Pair targetPoint;
+
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
 	public static Button[] gameButtons = Button.makePlayButtons();
 	private static Game myGame = new Game();
 	public boolean quit = false;
-	
-	public Ship currentShipA;
-	public Ship currentShipB;
-	public Ship currentShipGen;
+
+	public Ship currentShip;
 	public int indexA = -1;
 	public int indexB = -1;
+	public Ship currentShipA; 
+	public Ship currentShipB;
+
 
 	public Main(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
@@ -43,32 +45,24 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 public static void main (String[] args){
 
 		Main newMain = new Main();
+		JFrame frame = new JFrame("B A T T L E S H I P");
 
 		if(newMain.quit == false) { // WORK IN PROGRESS, QUIT FUNCTION
 			newMain.addMouseListener(newMain);
 			newMain.addKeyListener(newMain);
 			newMain.setEnabled(false);
-			JFrame frame = new JFrame("B A T T L E S H I P");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setContentPane(newMain);
 			frame.pack();
 			frame.setVisible(true);
 			frame.setFocusable(true);
-			getMyGame().play();
-		}
+			getMyGame().play();		}
 
 		else {
-			newMain = new Main();
-			newMain.addMouseListener(newMain);
-			newMain.addKeyListener(newMain);
-			newMain.setEnabled(false);
-			newMain.quit = false;
-			JFrame frame = new JFrame("B A T T L E S H I P");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setContentPane(newMain);
-			frame.pack();
 			frame.setVisible(true);
+			frame.dispose();
 			getMyGame().play();
+			frame.dispose();
 		}
 
 	}
@@ -208,40 +202,40 @@ public void drawGrid(Graphics g, int startX, int startY){
 				cornerPoint = point.findPointB(GridB);
 			}
 
-
-
 			if(x >= 25 && y<=580 && y>=550) { //check whether point falls in row of ship buttons
 
 			String type = null;
 
-				for(shipButton s: myShipButtonsArray[0]) { // buttons for Player A ships
+				for (shipButton s: myShipButtonsArray[0]) { // buttons for Player A ships
 
-					if(s.inButton(point)) {
+					if (s.inButton(point)) {
 						type = s.type;
 						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.RED, "A");
-						currentShipGen = shipAdd;
+						currentShip = shipAdd;
 						currentShipA = shipAdd;
 
-
 					}
-					
+
 					cornerPoint = new Pair(s.x, s.y);
 
 				}
 
 
-				for(shipButton s : myShipButtonsArray[1]) { // buttons for Player B ships
-					if(s.inButton(point)) {
+				for (shipButton s : myShipButtonsArray[1]) { // buttons for Player B ships
+					if (s.inButton(point)) {
 
 						type = s.type;
 						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.GREEN, "B");
-						currentShipGen = shipAdd;
-						currentShipB = shipAdd;
+						currentShip = shipAdd;
+						currentShipB = shipAdd;		
+
+
 
 				}
+				System.out.print("You've selected a " + type + " ship");
 					cornerPoint = new Pair(s.x, s.y);
 			}
-				System.out.print("You've selected a " + type + " ship");
+
 		}
 
 
@@ -252,12 +246,11 @@ public void drawGrid(Graphics g, int startX, int startY){
 				for(Button b : gameButtons) {
 					if(b.inButton(point)) {
 						type = b.type;
-						//go do stuff: make the privacy shades for "next", make a battle method for when FIRE is clicked (checkHit)
 
 						if(b.type == "Reset A") {
 
 							System.out.print("Resetting Player A's board . . .");
-							
+
 							getMyGame().armada_A = new LinkedList<Ship>();
 
 						}
@@ -268,54 +261,46 @@ public void drawGrid(Graphics g, int startX, int startY){
                             getMyGame().armada_B = new LinkedList<Ship>();
 
                         }
-						
+
 						else if (b.type == "Next Turn"){
 
 							getMyGame().moveCount++;
 							System.out.println(getMyGame().moveCount);
 
 						}
-						
+
 						else if(b.type == "Rotate") {
-						    
+
 						    System.out.println("You've selected the Rotate button. Press 'r' to rotate your last placed ship, and 'q' to exit rotate mode.");
 						    setEnabled(true);
 						    requestFocusInWindow();
-						    
+
 						}
-						
+
 						else if (b.type == "Erase") {
 						    System.out.println("Erasing your last placed ship.");
-						        
-						        if(this.currentShipGen.player == "A") {
-						           getMyGame().armada_A.removeLast();
-						           repaint();
-						            
+						    if(this.currentShip != null) {
+						        if(this.currentShip.player == "A") {
+						           	myGame.armada_A.removeLast();
+						           	repaint();
 						        }
-						        
-						        else if( this.currentShipGen.player == "B") {
-	                                   getMyGame().armada_B.removeLast();
-	                                   repaint();
-	                                    
-	                                }
-	                                
-						        
-						        
+						        else if( this.currentShip.player == "B") {
+	                      myGame.armada_B.removeLast();
+	                      repaint();
+	                  }
 						    }
-						    
-						    
-
 					}
-
 				}
-
-				System.out.println("You've selected the " + type + " button.");
-
 			}
 
-			return cornerPoint;
+			System.out.println("You've selected the " + type + " button.");
+
+		}
+
+		return cornerPoint;
 
 	}
+
 
 	@Override
 	 public void mouseClicked(MouseEvent e) {
@@ -323,11 +308,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 	  if(e.getButton() == 1){
 
 		 this.point = new Pair(e.getX(), e.getY());
-		 
-		 Pair corner = findPoint(this.point); //now take this point and go do stuff with it
-		 
-		 System.out.println("You clicked "  + this.point + ", aka the cornerPoint " + corner);
-		 
+		 System.out.println("You clicked "  + this.point);
+		 findPoint(this.point); //now take this point and go do stuff with it
 		 this.repaint();
 
 	  }
@@ -339,7 +321,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 	@Override
 	 	public void mouseEntered(MouseEvent e){
 	  // TODO Auto-generated method stub
-	    
+
 
 	 }
 
@@ -380,86 +362,99 @@ public void drawGrid(Graphics g, int startX, int startY){
 		super.paintComponent(g);
 		g.setColor(Color.BLACK); // sets background color
 		g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
-		g.setColor(Color.ORANGE);
+
+		g.setColor(Color.DARK_GRAY);
 		g.fillRect(0,0,BOX_WIDTH,25);
 
 		// draw grids
 		drawGrid(g,25,25);
 		drawGrid(g,520,25);
 
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setFont(new Font("Courier", Font.BOLD, 13));
 
 		// OPENING
 
 		if (myGame.moveCount==0){
-			Graphics2D g2d = (Graphics2D) g;
-			g.setColor(Color.BLUE);
-			g2d.setFont(new Font("Courier", Font.BOLD, 13));
+			g.setColor(Color.WHITE);
 			g2d.drawString("WELCOME TO BATTLESHIP. You've started a new game. To START, PLAYER 1, press the NEXT TURN button.", 30, 17);
 		}
 
 		// DRAW SHIPS
-	     if(myGame.armada_A != null) { //NEED TO MAKE ARRAYLIST OF SHIPS SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+	  if(myGame.armada_A != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+
 	            for(Ship s: myGame.armada_A) {
-	                System.out.println("Armada A contains " + s);
-	                g.setColor(Color.RED);
+
+	                System.out.println("This ship is " + s);
+	                g.setColor(s.color);
+
 	                g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
-	                
+
 	            }
+	  }
 
-	        }
+	  if(myGame.armada_B != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
 
-	     if(myGame.armada_B != null) { 
              for(Ship s: myGame.armada_B) {
-                 System.out.println("Armada B contains " + s);
-                 g.setColor(Color.GREEN);
+                 g.setColor(s.color);
                  g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
 
              }
+    }
 
-         }
 
-     
-	     
 
-			if(this.currentShipA != null && this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
+		if(this.currentShip != null){
+			g.setColor(Color.WHITE);
+			g2d.drawString("You've selected a " + currentShip.type + " ship", 30, 17);
+
+			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
 			    g.setColor(Color.RED);
-			    this.currentShipA.placeShip(this, g, Color.RED);
+
+			    this.currentShipA.placeShipA(g, this.currentShipA, this, Color.RED);
 
 			}
 
-			if(this.currentShipB != null && this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
+			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
 			    g.setColor(Color.GREEN);
-	             this.currentShipB.placeShip(this, g, Color.GREEN);
-		}
+	             this.currentShipB.placeShipB(g, this.currentShipB, this, Color.GREEN);
+			}
 
+	}
 
 		// DRAWS BLACK BOX OVER NON-PLAYER'S BOARD
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setFont(new Font("Courier", Font.BOLD, 13));
 
 		if (myGame.moveCount==1){ // first player places ships
 			g.setColor(Color.BLACK);
 			g.fillRect(520,25,470,470);
-			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 1, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 17);
+			g.setColor(Color.RED);
+			g2d.drawString("PLAYER 1, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
 		}
 		else if (myGame.moveCount==2){ // 2nd player places ships
 			g.setColor(Color.BLACK);
 			g.fillRect(25,25,470,470);
-			g.setColor(Color.BLUE);
-			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 17);
+			g.setColor(Color.GREEN);
+			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
 		}
-		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(1st player)
-			g.setColor(Color.BLACK);
-			g.fillRect(520,25,470,470);
-			drawGrid(g,520,25);
-		}
-		else { // 2nd player
+		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(2nd player)
 			g.setColor(Color.BLACK);
 			g.fillRect(25,25,470,470);
 			drawGrid(g,25,25);
-		}
+			g.setColor(Color.RED);
+			g2d.drawString("PLAYER 2, select a target square on PLAYER 2's board.", 540, 495);
 
+			targetPoint = findPoint(this.point);
+
+		}
+		else if (myGame.moveCount%2!=0 && myGame.moveCount>2){ // 1st player
+			g.setColor(Color.BLACK);
+			g.fillRect(520,25,470,470);
+			drawGrid(g,520,25);
+			g.setColor(Color.GREEN);
+			g2d.drawString("PLAYER 1, select a target square on PLAYER 2's board.", 30, 495);
+
+			//get target point
+		}
 
 	}
 
@@ -469,7 +464,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 	    }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+       public void keyPressed(KeyEvent e) {
 
         char c=e.getKeyChar();
         System.out.println("You pressed down: " + c);
@@ -486,7 +481,21 @@ public void drawGrid(Graphics g, int startX, int startY){
             if(currentShipA != null) {
 
                 Ship toRotate = getMyGame().armada_A.removeLast();
-                getMyGame().armada_A.addLast(toRotate.rotate(this));
+                Ship rotated = toRotate.rotate(this);
+                
+                if(getMyGame().armada_A.size() == 0) {
+                	getMyGame().armada_A.addLast(rotated);
+                	this.repaint();
+                }
+                else if(!rotated.checkArmadaOverlap()) {
+                	getMyGame().armada_A.addLast(rotated);
+                	this.repaint();
+                }
+                
+                else
+                	System.out.println("MAIN: Can't place here");
+              
+                
                 for(Ship s : getMyGame().armada_A) {
                     
                     System.out.println(s);
@@ -499,7 +508,13 @@ public void drawGrid(Graphics g, int startX, int startY){
             if(currentShipB != null) {
 
                 Ship toRotate = getMyGame().armada_B.removeLast();
-                getMyGame().armada_B.addLast(toRotate.rotate(this));
+
+                Ship rotated = toRotate.rotate(this);
+                
+                if(!rotated.checkArmadaOverlap())
+                	getMyGame().armada_B.addLast(rotated);
+              
+                
                 for(Ship s : getMyGame().armada_B) {
                     System.out.println(s);
                 }
@@ -509,28 +524,25 @@ public void drawGrid(Graphics g, int startX, int startY){
             
         }
     }
-            
+
     @Override
     public void keyReleased(KeyEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 
 
     @Override
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 
-
-    public static Game getMyGame() {
-        return myGame;
-    }
-
-
-    public static void setMyGame(Game myGame) {
-        Main.myGame = myGame;
+      public static Game getMyGame() {		
+        return myGame;		
+    }		
+    public static void setMyGame(Game myGame) {		
+        Main.myGame = myGame;		
     }
 
 }
