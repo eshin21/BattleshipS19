@@ -45,6 +45,7 @@ public static void main (String[] args){
 		if(newMain.quit == false) { // WORK IN PROGRESS, QUIT FUNCTION
 			newMain.addMouseListener(newMain);
 			newMain.addKeyListener(newMain);
+			newMain.setEnabled(false);
 			JFrame frame = new JFrame("B A T T L E S H I P");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setContentPane(newMain);
@@ -57,6 +58,8 @@ public static void main (String[] args){
 		else {
 			newMain = new Main();
 			newMain.addMouseListener(newMain);
+			newMain.addKeyListener(newMain);
+			newMain.setEnabled(false);
 			newMain.quit = false;
 			JFrame frame = new JFrame("B A T T L E S H I P");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -278,7 +281,24 @@ public void drawGrid(Graphics g, int startX, int startY){
 						}
 						
 						else if (b.type == "Erase") {
-						    System.out.println("You've selected Erase to erase your last placed ship. Click anywhere to place that ship again.");
+						    System.out.println("Erasing your last placed ship.");
+						    if(this.currentShip != null) {
+						        
+						        if(this.currentShip.player == "A") {
+						           myGame.armada_A.removeLast();
+						           repaint();
+						            
+						        }
+						        
+						        else if( this.currentShip.player == "B") {
+	                                   myGame.armada_B.removeLast();
+	                                   repaint();
+	                                    
+	                                }
+	                                
+						        
+						        
+						    }
 						    
 						    
 						}
@@ -464,7 +484,7 @@ public void drawGrid(Graphics g, int startX, int startY){
         }
         if(c=='r') {
 
-            if(this.currentShip.player == "A") {
+            if(currentShip != null && this.currentShip.player == "A") {
 
                 Ship toRotate = myGame.armada_A.removeLast();
                 myGame.armada_A.addLast(toRotate.rotate());
@@ -477,12 +497,16 @@ public void drawGrid(Graphics g, int startX, int startY){
                 this.repaint();
             }
             
-            if(this.currentShip.player == "B") {
-                int index = myGame.armada_B.size()-1;
-                Ship toRotate = myGame.armada_B.get(index);
-                myGame.armada_B.remove(index);
-                toRotate = toRotate.rotate();
-                myGame.armada_B.add(toRotate);
+            if(currentShip != null && this.currentShip.player == "B") {
+
+                Ship toRotate = myGame.armada_B.removeLast();
+                myGame.armada_B.addLast(toRotate.rotate());
+                
+                for(Ship s : myGame.armada_B) {
+                    
+                    System.out.println(s);
+                    
+                }
                 setEnabled(false);
                 this.repaint();
             }
@@ -490,37 +514,6 @@ public void drawGrid(Graphics g, int startX, int startY){
         }
     }
             
-//            Ship toRotate = this.rects.get(current);
-            
-            
-            
-//            if(toRotate.color == Color.RED) {
-//                this.myGame.armada_A.remove(current);
-//                System.out.println("Armada B is now  comprised of" + this.myGame.armada_A);
-//            }
-//            
-//            else if(toRotate.color == Color.GREEN) {
-//                this.myGame.armada_B.remove(current);
-//                System.out.println("Armada B is now comprised of " + myGame.armada_B);
-//            }
-//            
-//            
-//            System.out.println(toRotate);
-//            
-//            Rectangle toAdd = toRotate.rotate();
-//            this.rects.remove(current);
-//            this.rects.add(toAdd);
-//            this.repaint(); 
-//        }
-//        
-//        if(c=='q') {
-//            System.out.println("Exiting rotate mode");
-//            setEnabled(false);
-//            
-////        }
-//    }
-
-
     @Override
     public void keyReleased(KeyEvent e) {
         // TODO Auto-generated method stub

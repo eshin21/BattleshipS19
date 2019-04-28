@@ -192,9 +192,9 @@ public class Ship{
         
         Pair adjPoint = new Pair(this.position.x - (this.ydim - 45) , this.position.y);
         
-        Ship toReturn = new Ship(this.type, adjPoint, 270,45, this.color, this.player);
+        Ship toReturn = new Ship(this.type, adjPoint, this.ydim,this.xdim, this.color, this.player);
         
-        System.out.println("I'm rotating this to a Ship of " + toReturn);
+        System.out.println("*****I'm rotating this to a Ship at " + toReturn.position);
         
         Pair anchor = new Pair(this.position.x, this.position.y);
         
