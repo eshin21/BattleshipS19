@@ -35,7 +35,8 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public int indexB = -1;
 	public Ship currentShipA; 
 	public Ship currentShipB;
-
+	public Graphics g;
+	
 
 	public Main(){
 			this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
@@ -48,7 +49,7 @@ public static void main (String[] args){
 		JFrame frame = new JFrame("B A T T L E S H I P");
 
 		if(newMain.quit == false) { // WORK IN PROGRESS, QUIT FUNCTION
-			newMain.addMouseListener(newMain);
+		    newMain.addMouseListener(newMain);
 			newMain.addKeyListener(newMain);
 			newMain.setEnabled(false);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -193,6 +194,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 			double x = point.x;
 			double y = point.y;
+
 			Pair cornerPoint = new Pair(25,25);
 
 			if(x <= 475 && y <=475) { ///if click was in Grid A, call findPointA
@@ -203,38 +205,30 @@ public void drawGrid(Graphics g, int startX, int startY){
 			}
 
 			if(x >= 25 && y<=580 && y>=550) { //check whether point falls in row of ship buttons
-
-			String type = null;
-
+			    String type = null;
 				for (shipButton s: myShipButtonsArray[0]) { // buttons for Player A ships
-
+				    
 					if (s.inButton(point)) {
-						type = s.type;
-						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.RED, "A");
-						currentShip = shipAdd;
-						currentShipA = shipAdd;
-
+						
+					    
+					    type = s.type;
+						Ship shipAdd = new Ship(type, point, 45, s.length*45, Color.RED, "A");
+						this.currentShip = shipAdd;
+						this.currentShipA = shipAdd;
 					}
-
-					cornerPoint = new Pair(s.x, s.y);
-
 				}
-
 
 				for (shipButton s : myShipButtonsArray[1]) { // buttons for Player B ships
-					if (s.inButton(point)) {
-
+				    if (s.inButton(point)) {
 						type = s.type;
-						Ship shipAdd = new Ship(s.type, point, 45, s.length*45, Color.GREEN, "B");
-						currentShip = shipAdd;
-						currentShipB = shipAdd;		
-
-
-
+						Ship shipAdd = new Ship(type, point, 45, s.length*45, Color.GREEN, "B");
+						this.currentShip = shipAdd;
+						this.currentShipB = shipAdd;		
 				}
-				System.out.print("You've selected a " + type + " ship");
-					cornerPoint = new Pair(s.x, s.y);
 			}
+				
+                System.out.print("You've selected a " + type + " ship");
+
 
 		}
 
@@ -242,71 +236,71 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 			else if(x >= 200 && x<= 635 && y>=600 && y<=710) { // GENERAL REGION FOR GAMEPLAY BUTTONS
 
-				String type = null;
+				String type = "NA";
+				
 				for(Button b : gameButtons) {
 					if(b.inButton(point)) {
 						type = b.type;
-
-						if(b.type == "Reset A") {
+						
+						if(b.type.equals("Reset A")) {
 
 							System.out.print("Resetting Player A's board . . .");
-
 							getMyGame().armada_A = new LinkedList<Ship>();
 
 						}
 
-						if(b.type == "Reset B") {
-
+						else if(b.type.equals("Reset B")) {
                             System.out.print("Resetting Player B's board . . .");
                             getMyGame().armada_B = new LinkedList<Ship>();
 
                         }
 
-						else if (b.type == "Next Turn"){
-
+						else if (b.type.equals("Next Turn")){
 							getMyGame().moveCount++;
 							System.out.println(getMyGame().moveCount);
-
 						}
 
-						else if(b.type == "Rotate") {
-
-						    System.out.println("You've selected the Rotate button. Press 'r' to rotate your last placed ship, and 'q' to exit rotate mode.");
+						else if(b.type.equals("Move")) {
+						        
+						    System.out.println("You've selected the Move button. Press 'r' to rotate your last placed ship, 's' to shift it down, and 'q' to exit rotate mode.");
 						    setEnabled(true);
 						    requestFocusInWindow();
 
 						}
 
-						else if (b.type == "Erase") {
+						else if (b.type.equals("Erase")) {
 						    System.out.println("Erasing your last placed ship.");
-						    if(this.currentShip != null) {
-						        if(this.currentShip.player == "A") {
+						    
+						    if(this.currentShip.type.equals("A") && myGame.armada_A.size() == 0)
+						        return cornerPoint;
+						        
+						    else if(myGame.armada_A.size() >0 && this.currentShipA != null && this.currentShip.player.equals("A")) {
 						           	myGame.armada_A.removeLast();
 						           	repaint();
 						        }
-						        else if( this.currentShip.player == "B") {
-	                      myGame.armada_B.removeLast();
-	                      repaint();
-	                  }
-						    }
+						    
+						    else if(this.currentShip.type.equals("B") && myGame.armada_B.size() == 0)
+                                return cornerPoint;
+						        else if(this.currentShipB != null && this.currentShip.player.equals("B")) {
+						            myGame.armada_B.removeLast();
+						            repaint();
+						        }
+						  }
 					}
 				}
 			}
 
-			System.out.println("You've selected the " + type + " button.");
-
-		}
 
 		return cornerPoint;
 
 	}
 
 
-	@Override
+	
+@Override
 	 public void mouseClicked(MouseEvent e) {
 
 	  if(e.getButton() == 1){
-
 		 this.point = new Pair(e.getX(), e.getY());
 		 System.out.println("You clicked "  + this.point);
 		 findPoint(this.point); //now take this point and go do stuff with it
@@ -380,22 +374,20 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g2d.drawString("WELCOME TO BATTLESHIP. You've started a new game. To START, PLAYER 1, press the NEXT TURN button.", 30, 17);
 		}
 
-		// DRAW SHIPS
-	  if(myGame.armada_A != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+		
 
-	            for(Ship s: myGame.armada_A) {
+        // MAKE SHIPS and ADD TO ARMADAS
+        
+      if(this.currentShip != null && myGame.armada_A != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+                for(Ship s : myGame.armada_A){
+                    System.out.println("Armada A has a " + s);
+                    g.setColor(s.color);
+                    g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
+          }
+      }
 
-	                System.out.println("This ship is " + s);
-	                g.setColor(s.color);
-
-	                g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
-
-	            }
-	  }
-
-	  if(myGame.armada_B != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
-
-             for(Ship s: myGame.armada_B) {
+      if(this.currentShip != null && myGame.armada_B != null) { //NEED TO MAKE ARRAYLIST OF RECTANGLES SO REPAINT DOESN'T DELETE THEM EVERY TIME WE DRAW A NEW RECTANGLE
+             for(Ship s: getMyGame().armada_B) {
                  g.setColor(s.color);
                  g.fillRect((int)s.position.x, (int)s.position.y, s.xdim, s.ydim);
 
@@ -403,24 +395,27 @@ public void drawGrid(Graphics g, int startX, int startY){
     }
 
 
-
+		
 		if(this.currentShip != null){
-			g.setColor(Color.WHITE);
-			g2d.drawString("You've selected a " + currentShip.type + " ship", 30, 17);
+            g.setColor(Color.WHITE);
+            g2d.drawString("You've selected a " + currentShip.type + " ship", 30, 17);
 
-			if(this.point != null && this.point.x >= 25 && this.point.y <= 475) { // in grid A
-			    g.setColor(Color.RED);
+            if(this.point.x >= 25 && this.point.y <= 475 && this.point.x <=475) { // in grid A
+                g.setColor(Color.RED);
+                currentShipA.placeShipA(g, this.currentShipA, this, Color.RED);
 
-			    this.currentShipA.placeShipA(g, this.currentShipA, this, Color.RED);
+            }
 
-			}
+            if(this.point != null && this.point.x >= 520 && this.point.y <= 475 && this.point.x <= 970 /*&& this.currentShipB != null*/) { // in grid B
+                g.setColor(Color.GREEN);
+                 this.currentShipB.placeShipB(g, this.currentShipB, this, Color.GREEN);
+//                 g.fillRect((int)currentShipB.position.x, (int) currentShipB.position.y, currentShipB.xdim, currentShipB.ydim);
+            }
 
-			if(this.point != null && this.point.x >= 520 && this.point.y <= 475 ) { // in grid B
-			    g.setColor(Color.GREEN);
-	             this.currentShipB.placeShipB(g, this.currentShipB, this, Color.GREEN);
-			}
-
-	}
+    }
+		
+		
+		
 
 		// DRAWS BLACK BOX OVER NON-PLAYER'S BOARD
 
@@ -429,12 +424,18 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g.fillRect(520,25,470,470);
 			g.setColor(Color.RED);
 			g2d.drawString("PLAYER 1, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
+			g2d.drawString("After placing, you can move the ship (click 'Move' button and press 'r' to rotate, 'WASD' to shift down, 'q' to cancel.", 30, 515);
+	
+			
 		}
 		else if (myGame.moveCount==2){ // 2nd player places ships
 			g.setColor(Color.BLACK);
 			g.fillRect(25,25,470,470);
 			g.setColor(Color.GREEN);
 			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
+			g2d.drawString("After placing, you can rotate the ship (click 'rotate' button and press 'r'), or press 's' to shift the ship down", 30, 515);
+			g2d.drawString("After placing, you can move the ship (click 'Move' button and press 'r' to rotate, 'WASD' to shift ship, 'q' to cancel.", 30, 515);
+
 		}
 		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(2nd player)
 			g.setColor(Color.BLACK);
@@ -462,68 +463,140 @@ public void drawGrid(Graphics g, int startX, int startY){
 	        super.addNotify();
 	        requestFocus();
 	    }
+	
 
-    @Override
-       public void keyPressed(KeyEvent e) {
+	@Override
+	public void keyPressed(KeyEvent e) {
 
         char c=e.getKeyChar();
         System.out.println("You pressed down: " + c);
 
         if(c=='q') {
             System.out.println("Exiting rotate mode");
-          setEnabled(false);
-
-            
-            
+            setEnabled(false);
         }
+        
+        if(c=='w') {
+            System.out.println("Shifting up...");
+            
+            if(this.currentShipA != null && this.currentShip.player.equals("A")) {
+                System.out.println("Shifting up this " + this.currentShip.type );                
+                getMyGame().armada_A.getLast().shiftUp();
+                
+            }
+            else if(this.currentShipB!= null && this.currentShip.player.equals("B")) {
+                System.out.println("Shifting up this " + this.currentShip.type );                
+                getMyGame().armada_B.getLast().shiftUp();
+            }
+            
+            repaint();
+        }
+        
+        
+        if(c=='a') {
+            System.out.println("Shifting left...");
+            
+            if(this.currentShipA != null && this.currentShip.player.equals("A")) {
+                System.out.println("Shifting left this " + this.currentShip.type );                
+                getMyGame().armada_A.getLast().shiftLeft();
+                
+            }
+            else if(this.currentShipB!= null && this.currentShip.player.equals("B")) {
+                System.out.println("Shifting left this " + this.currentShip.type );                
+                getMyGame().armada_B.getLast().shiftLeft();
+            }
+            
+            repaint();
+        }
+        
+        
+        if(c=='s') {
+            System.out.println("Shifting down...");
+            
+            if(this.currentShipA != null && this.currentShip.player.equals("A")) {
+                System.out.println("Shifting down this " + this.currentShip.type );                
+                getMyGame().armada_A.getLast().shiftDown();
+                
+            }
+            else if(this.currentShipB!= null && this.currentShip.player.equals("B")) {
+                System.out.println("Shifting down this " + this.currentShip.type );                
+                getMyGame().armada_B.getLast().shiftDown();
+            }
+            
+            repaint();
+        }
+        
+        if(c=='d') {
+            System.out.println("Shifting right...");
+            
+            if(this.currentShipA != null && this.currentShip.player.equals("A")) {
+                System.out.println("Shifting right this " + this.currentShip.type );                
+                getMyGame().armada_A.getLast().shiftRight();
+                
+            }
+            else if(this.currentShipB!= null && this.currentShip.player.equals("B")) {
+                System.out.println("Shifting right this " + this.currentShip.type );                
+                getMyGame().armada_B.getLast().shiftRight();
+            }
+            
+            repaint();
+        }
+            
+            
         if(c=='r') {
 
-            if(currentShipA != null) {
 
-                Ship toRotate = getMyGame().armada_A.removeLast();
+            if(currentShip.player.equals("A") && currentShipA != null) {
+
+                System.out.println("///////////////////****TEST");
+                Ship toRotate = myGame.armada_A.getLast();
                 Ship rotated = toRotate.rotate(this);
-                
-                if(getMyGame().armada_A.size() == 0) {
+                if(!rotated.checkArmadaOverlap()) {
+                    System.out.println("No issues here.");
+                    getMyGame().armada_A.removeLast();
                 	getMyGame().armada_A.addLast(rotated);
+                   this.repaint();
+                   setEnabled(false);
+
+                }
+                
+                else if(rotated.checkArmadaOverlap()){
+                	System.out.println("MAIN: Can't rotate this ship due to overlap.");
+                    setEnabled(false);
                 	this.repaint();
                 }
-                else if(!rotated.checkArmadaOverlap()) {
-                	getMyGame().armada_A.addLast(rotated);
-                	this.repaint();
-                }
                 
-                else
-                	System.out.println("MAIN: Can't place here");
-              
-                
-                for(Ship s : getMyGame().armada_A) {
-                    
-                    System.out.println(s);
-                    
-                }
                 setEnabled(false);
                 this.repaint();
             }
             
-            if(currentShipB != null) {
+            if(currentShip.player.equals("B") && currentShipB != null) {
 
-                Ship toRotate = getMyGame().armada_B.removeLast();
-
+                System.out.println("///////////////////****TEST");
+                Ship toRotate = myGame.armada_B.getLast();
                 Ship rotated = toRotate.rotate(this);
-                
-                if(!rotated.checkArmadaOverlap())
-                	getMyGame().armada_B.addLast(rotated);
-              
-                
-                for(Ship s : getMyGame().armada_B) {
-                    System.out.println(s);
+                if(!rotated.checkArmadaOverlap()) {
+                    System.out.println("No issues here.");
+                    getMyGame().armada_B.removeLast();
+                    getMyGame().armada_B.addLast(rotated);
+                   this.repaint();
+                   setEnabled(false);
+
                 }
+                
+                else if(rotated.checkArmadaOverlap()){
+                    System.out.println("MAIN: Can't rotate this ship due to overlap.");
+                    setEnabled(false);
+                    this.repaint();
+                }
+                
                 setEnabled(false);
                 this.repaint();
             }
             
         }
     }
+
 
     @Override
     public void keyReleased(KeyEvent e) {
