@@ -35,6 +35,7 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public int indexB = -1;
 	public Ship currentShipA;
 	public Ship currentShipB;
+	public static boolean onePlayerMode = false;
 	public static boolean isPlayerA = false;
 	public static boolean checkedMove = false;
 	public static boolean fired = false;
@@ -181,10 +182,10 @@ public void drawGrid(Graphics g, int startX, int startY){
 				g.setColor(Color.YELLOW);
 				g.fillRect(b.x, b.y, b.xdim,  b.ydim);
 				g.setColor(Color.BLACK);
-				if(b.type != "F I R E !") { // SPECIAL CASE FOR "FIRE" BUTTON
-					g.drawString(b.type, b.x+12, b.y+30);
+				if (b.type == "One-Player Mode"){
+					g.drawString("One-Player", b.x+12, b.y+23);
+					g.drawString("Mode",b.x+12, b.y+38);
 				}
-
 				else {
 					g.drawString(b.type, b.x+12, b.y+30);
 				}
@@ -327,6 +328,9 @@ public void drawGrid(Graphics g, int startX, int startY){
 						        }
 						 }
 
+						else if (b.type.equals("One-Player Mode")){
+							onePlayerMode = true;
+						}
 						else if (b.type.equals("F I R E !")){
 								fired = true;
 						}
@@ -351,9 +355,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 		 System.out.println("You clicked "  + this.point);
 		 targetPoint = findPoint(this.point); //now take this point and go do stuff with it
 		 this.repaint();
-
 	  }
-
 	 }
 
 ///////////IGNORE THESE : NECESSARY FOR COMPILING
@@ -461,7 +463,10 @@ public void drawGrid(Graphics g, int startX, int startY){
 					}
     }
 
-
+		if (onePlayerMode){
+			g.setColor(Color.ORANGE);
+				g2d.drawString("ONE-PLAYER MODE SELECTED.", 800, 17);
+		}
 
 
 		// DRAWS BLACK BOX OVER NON-PLAYER'S BOARD
@@ -476,29 +481,51 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 		}
 		else if (myGame.moveCount==2){ // 2nd player places ships
-			g.setColor(Color.BLACK);
-			g.fillRect(25,25,470,470);
-			g.setColor(Color.GREEN);
-			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
-			g2d.drawString("You can move a recently placed ship: click 'Move'. Press 'r' to rotate, 'WASD' to shift it, 'q' to quit move mode.", 30, 515);
-
+			if (onePlayerMode){
+				g.setColor(Color.BLACK);
+				g.fillRect(25,25,1000,470);
+				//randomly fill ships in
+			}
+			else{
+				g.setColor(Color.BLACK);
+				g.fillRect(25,25,470,470);
+				g.setColor(Color.GREEN);
+				g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
+				g2d.drawString("You can move a recently placed ship: click 'Move'. Press 'r' to rotate, 'WASD' to shift it, 'q' to quit move mode.", 30, 515);
+			}
 		}
 		else if (myGame.moveCount%2==0 && myGame.moveCount>=2){ //if move is even(2nd player)
-			g.setColor(Color.BLACK);
-			g.fillRect(25,25,470,470);
-			drawGrid(g,25,25);
-			g.setColor(Color.RED);
-			g2d.drawString("PLAYER 2, select a target square on PLAYER 2's board.", 540, 495);
-
-			//display target square
-			if (checkedMove){
-				g.setColor(Color.YELLOW);
-				g.fillRect((int)targetPoint.x+5,(int)targetPoint.y+5,40,40);
+			if (onePlayerMode){
+				Random rand = new Random();
+				CoordinateRange cr = GridA[rand.nextInt(10)][rand.nextInt(10)];
+				this.point = new Pair(cr.xrange.x,cr.yrange.y);
+				System.out.println("random point:" + this.point);
+				targetPoint = findPoint(this.point);
+				g.setColor(Color.BLACK);
+				g.fillRect(25,25,1000,470);
+				g.setColor(Color.GREEN);
+				g2d.drawString("PLAYER 2 IS THINKING...",400,300);
 			}
+			else{
+				g.setColor(Color.BLACK);
+				g.fillRect(25,25,470,470);
+				drawGrid(g,25,25);
+				g.setColor(Color.RED);
+				g2d.drawString("PLAYER 2, select a target square on PLAYER 2's board.", 540, 495);
 
-			if (hit && fired){
-				 g2d.drawString("You hit a ship!", 30, 17);
-				 hit = false;
+				//display target square
+				if (checkedMove){
+					g.setColor(Color.YELLOW);
+					g.fillRect((int)targetPoint.x+5,(int)targetPoint.y+5,40,40);
+				}
+
+				if (hit && fired){
+					g2d.drawString("You hit a ship!", 30, 17);
+					hit = false;
+				}
+				else if (fired){
+					g2d.drawString("You missed.", 30, 17);
+				}
 			}
 		}
 		else if (myGame.moveCount%2!=0 && myGame.moveCount>2){ // 1st player
@@ -516,6 +543,9 @@ public void drawGrid(Graphics g, int startX, int startY){
 			if (hit && fired){
 				 g2d.drawString("You hit a ship!", 30, 17);
 				 hit = false;
+			}
+			else if (fired){
+				g2d.drawString("You missed.", 30, 17);
 			}
 		}
 
