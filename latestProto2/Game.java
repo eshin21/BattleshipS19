@@ -27,6 +27,7 @@ public class Game{
         this.playerB_status = 0;
     }
 
+
     public void play() {
         if (this.gameOver){
             System.out.println("Game over!");
