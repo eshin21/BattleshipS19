@@ -28,17 +28,7 @@ public class Game{
     }
 
     public void play() {
-        if(moveCount % 2 == 0 && this.gameOver == false) {
-            System.out.println("It's Player 1's turn.");
-
-
-        }
-        else if(moveCount % 2 == 1 && this.gameOver== false) {
-            System.out.println("It's Player 2's turn.");
-
-
-        }
-        else {
+        if (this.gameOver){
             System.out.println("Game over!");
             if(playerA_status > 0)
                 System.out.print(" Player one wins!");

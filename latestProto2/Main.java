@@ -478,6 +478,10 @@ public void drawGrid(Graphics g, int startX, int startY){
 			drawGrid(g,25,25);
 			g.setColor(Color.RED);
 			g2d.drawString("PLAYER 2, select a target square on PLAYER 2's board.", 540, 495);
+
+			if (hit){
+				 g2d.drawString("You hit a ship!", 30, 17);
+			}
 		}
 		else if (myGame.moveCount%2!=0 && myGame.moveCount>2){ // 1st player
 			g.setColor(Color.BLACK);
@@ -485,6 +489,10 @@ public void drawGrid(Graphics g, int startX, int startY){
 			drawGrid(g,520,25);
 			g.setColor(Color.GREEN);
 			g2d.drawString("PLAYER 1, select a target square on PLAYER 2's board.", 30, 495);
+			
+			if (hit){
+				 g2d.drawString("You hit a ship!", 30, 17);
+			}
 		}
 
 	}
