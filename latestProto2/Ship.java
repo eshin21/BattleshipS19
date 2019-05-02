@@ -30,9 +30,7 @@ public class Ship{
     public void placeShipA (Graphics g, Ship s, Main m, Color c) {
         
         if(this.alreadyPlacedA()) {
-            g.setColor(Color.YELLOW);
-            Graphics2D g2d =  (Graphics2D) g;
-            g2d.drawString("!!! You've already placed this Ship. Select a different one.", 300, 17);
+            System.out.println("You've already placed this ship, sorry. Pick a new one.");
             return;
             
         }
@@ -93,9 +91,7 @@ public class Ship{
 
         
         if(this.alreadyPlacedB()) {
-            g.setColor(Color.YELLOW);
-            Graphics2D g2d =  (Graphics2D) g;
-            g2d.drawString("!!! You've already placed this Ship. Select a different one.", 300, 17);
+            System.out.println("You've already placed this ship, sorry. Pick a new one.");
             return;
             
         }
@@ -158,16 +154,19 @@ public class Ship{
             if(p.y + this.ydim <= 475 && p.x + this.xdim <= 475 && p.y >=25 && p.x>=25) {       
                 return false; 
             }
+            else if(p.y < 25 || p.x  < 25)
+                return true;
         }
         
         else if(this.player.equals("B")) {
             
             if(p.y + this.ydim <= 475 && p.x + this.xdim <= 975 && p.y >= 25 && p.x>=520) {
                 return false;
-                 
             
             }
-        
+            
+            else if(p.y<25 || p.x < 520)
+                return true;
         }      
             
         return true;
@@ -289,20 +288,6 @@ public class Ship{
         Pair adjPoint = new Pair(this.position.x - (this.ydim - 45) , this.position.y);
         
         Ship toReturn = new Ship(this.type, adjPoint, this.ydim,this.xdim, this.color, this.player);
-        if(!toReturn.isOOB(adjPoint) && !toReturn.checkArmadaOverlap()) {
-            System.out.println("*****I'm rotating this to a Ship at " + toReturn.position + " with dimensions " + toReturn.xdim + " by " + toReturn.ydim );
-            return toReturn;
-        }
-        else if(!toReturn.isOOB(adjPoint) && toReturn.checkArmadaOverlap()){
-            System.out.println("Sorry, you can't rotate this due to overlap. Try erasing and placing again.");
-            
-        }
-        else if (toReturn.isOOB(adjPoint) && !toReturn.checkArmadaOverlap()) {
-            toReturn = toReturn.checkEdge(adjPoint, m);
-            return toReturn;
-        }
-        
-            System.out.println("Sorry, you can't rotate this ship. Try erasing and placing again.");
             return toReturn;
             
             
@@ -370,7 +355,14 @@ public class Ship{
         System.out.println("ISOVERLAP: I'm checking overlaps");
         
         ArrayList<Pair> s_coord = s.givePoints();
+        
+        for(Pair p : s_coord)
+            System.out.println(p);
+        
+        
         ArrayList<Pair> this_coord = this.givePoints();
+        for(Pair p : this_coord)
+            System.out.println(p);
 
             
         //compare each Pair in one ship to all the other Pairs of the other ship.
@@ -390,11 +382,13 @@ public class Ship{
     }
     
     public boolean checkArmadaOverlap() {
+       
+        System.out.println("OVERLAP METHOD RUNNING...");
         
         if(this.player.equals("A")) {
             System.out.println("Checking overlap in Armada A...");
             for(Ship a : Main.getMyGame().armada_A) {
-                if(this.isOverlap(a)) {
+                if(!this.equals(a) && this.isOverlap(a)) {
                     System.out.println("****A: Sorry, you can't place a ship here due to overlap. Try again");
                     return true;
                 }
@@ -403,7 +397,7 @@ public class Ship{
         
         else if (this.player=="B") {
                 for(Ship b: Main.getMyGame().armada_B) {
-                    if(this.isOverlap(b)) {
+                    if(!this.equals(b) && this.isOverlap(b)) {
                         System.out.println("***B: Sorry, you can't place a ship here due to overlap. Try again");
                         return true;
                     }
@@ -478,6 +472,7 @@ public void shiftUp() {
             return;
             
         }
+        
         
         if(this.player.equals("A") && !shifted.checkArmadaOverlap()) {
             

@@ -256,13 +256,35 @@ public void drawGrid(Graphics g, int startX, int startY){
                         }
 
 						else if (b.type.equals("Next Turn")){
-							getMyGame().moveCount++;
-							System.out.println(getMyGame().moveCount);
+						    
+//						
+//						    while(this.currentShip != null && this.currentShip.type.equals("A") && getMyGame().moveCount<=1) {
+//
+//						        for(Ship s : getMyGame().armada_A) {
+//						            if(s.checkArmadaOverlap()) {
+//						              System.out.println("Whoops, your " + s.type + " ship appears to be overlapping something--try pressing Erase to reposition your ships.");
+//						              return cornerPoint;
+//						            }
+//						        }
+//						        
+//						        for(Ship s : getMyGame().armada_B) {
+//						            if(s.checkArmadaOverlap()) {
+//	                                      System.out.println("Whoops, your " + s.type + " ship appears to be overlapping something--try pressing Eras to reposition your ships");   
+//	                                      return cornerPoint;
+//						                }
+//						        }
+//						        
+//						    }
+						    
+						    //else {
+						        getMyGame().moveCount++;
+						        System.out.println(getMyGame().moveCount);
+						    //}
 						}
 
 						else if(b.type.equals("Move")) {
 						        
-						    System.out.println("You've selected the Move button. Press 'r' to rotate your last placed ship, 's' to shift it down, and 'q' to exit rotate mode.");
+						    System.out.println("Move mode selected. Press 'r' to rotate your last placed ship, 'WASD' to shift it, and 'q' to quit move mode.");
 						    setEnabled(true);
 						    requestFocusInWindow();
 
@@ -424,7 +446,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g.fillRect(520,25,470,470);
 			g.setColor(Color.RED);
 			g2d.drawString("PLAYER 1, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
-			g2d.drawString("After placing, you can move the ship (click 'Move' button and press 'r' to rotate, 'WASD' to shift down, 'q' to cancel.", 30, 515);
+			g2d.drawString("You can move a recently placed ship: click 'Move'. Press 'r' to rotate, 'WASD' to shift it, 'q' to quit move mode.", 30, 515);
 	
 			
 		}
@@ -433,11 +455,10 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g.fillRect(25,25,470,470);
 			g.setColor(Color.GREEN);
 			g2d.drawString("PLAYER 2, select a ship below. Then, click where you would like to place the ship on the grid.", 30, 500);
-			g2d.drawString("After placing, you can rotate the ship (click 'rotate' button and press 'r'), or press 's' to shift the ship down", 30, 515);
-			g2d.drawString("After placing, you can move the ship (click 'Move' button and press 'r' to rotate, 'WASD' to shift ship, 'q' to cancel.", 30, 515);
+			g2d.drawString("You can move a recently placed ship: click 'Move'. Press 'r' to rotate, 'WASD' to shift it, 'q' to quit move mode.", 30, 515);
 
 		}
-		else if (myGame.moveCount%2==0 && myGame.moveCount>2){ //if move is even(2nd player)
+		else if (myGame.moveCount%2==0 && myGame.moveCount>=2){ //if move is even(2nd player)
 			g.setColor(Color.BLACK);
 			g.fillRect(25,25,470,470);
 			drawGrid(g,25,25);
@@ -472,7 +493,8 @@ public void drawGrid(Graphics g, int startX, int startY){
         System.out.println("You pressed down: " + c);
 
         if(c=='q') {
-            System.out.println("Exiting rotate mode");
+            System.out.println("Exiting rotate mode...");
+            
             setEnabled(false);
         }
         
@@ -551,12 +573,11 @@ public void drawGrid(Graphics g, int startX, int startY){
                 System.out.println("///////////////////****TEST");
                 Ship toRotate = myGame.armada_A.getLast();
                 Ship rotated = toRotate.rotate(this);
-                if(!rotated.checkArmadaOverlap()) {
+                if(!rotated.checkArmadaOverlap() && !rotated.isOOB(rotated.position)) {
                     System.out.println("No issues here.");
                     getMyGame().armada_A.removeLast();
                 	getMyGame().armada_A.addLast(rotated);
                    this.repaint();
-                   setEnabled(false);
 
                 }
                 
@@ -565,8 +586,10 @@ public void drawGrid(Graphics g, int startX, int startY){
                     setEnabled(false);
                 	this.repaint();
                 }
+                else if(rotated.isOOB(rotated.position)) {
+                    System.out.println("Can't rotate this because it'll be out of bounds.");
+                }
                 
-                setEnabled(false);
                 this.repaint();
             }
             
@@ -575,12 +598,11 @@ public void drawGrid(Graphics g, int startX, int startY){
                 System.out.println("///////////////////****TEST");
                 Ship toRotate = myGame.armada_B.getLast();
                 Ship rotated = toRotate.rotate(this);
-                if(!rotated.checkArmadaOverlap()) {
+                if(!rotated.checkArmadaOverlap() && !rotated.isOOB(rotated.position)) {
                     System.out.println("No issues here.");
                     getMyGame().armada_B.removeLast();
                     getMyGame().armada_B.addLast(rotated);
                    this.repaint();
-                   setEnabled(false);
 
                 }
                 
@@ -589,8 +611,10 @@ public void drawGrid(Graphics g, int startX, int startY){
                     setEnabled(false);
                     this.repaint();
                 }
+                else if(rotated.isOOB(rotated.position)) {
+                    System.out.println("Can't rotate this because it'll be out of bounds.");
+                }
                 
-                setEnabled(false);
                 this.repaint();
             }
             
