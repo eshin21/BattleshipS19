@@ -490,7 +490,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 			//display target square
 			if (checkedMove){
 				g.setColor(Color.YELLOW);
-				g.fillRect((int)targetPoint.x,(int)targetPoint.y,45,45);
+				g.fillRect((int)targetPoint.x+5,(int)targetPoint.y+5,40,40);
 			}
 
 			if (hit && fired){
@@ -507,7 +507,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 			if (checkedMove){
 				g.setColor(Color.YELLOW);
-				g.fillRect((int)targetPoint.x,(int)targetPoint.y,45,45);
+				g.fillRect((int)targetPoint.x+5,(int)targetPoint.y+5,40,40);
 			}
 
 			if (hit && fired){
