@@ -36,6 +36,9 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public Ship currentShipA;
 	public Ship currentShipB;
 	public static boolean isPlayerA = false;
+	public static boolean checkedMove = false;
+	public static boolean fired = false;
+	public static boolean hit = false;
 	public Graphics g;
 
 
@@ -213,7 +216,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 				if (getMyGame().moveCount>2){
 					System.out.println("testing player a's move");
 					isPlayerA = true;
-					getMyGame().hitShip(cornerPoint,isPlayerA);
+					hit = getMyGame().hitShip(cornerPoint,isPlayerA);
+					checkedMove = true;
 				}
 			}
 
@@ -320,7 +324,10 @@ public void drawGrid(Graphics g, int startX, int startY){
 						            myGame.armada_B.removeLast();
 						            repaint();
 						        }
-						  }
+						}
+						else if (b.type.equals("F I R E !")){
+								fired = true;
+						}
 					}
 				}
 			}
@@ -334,11 +341,12 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 @Override
 	 public void mouseClicked(MouseEvent e) {
+		checkedMove = false;
 
 	  if(e.getButton() == 1){
 		 this.point = new Pair(e.getX(), e.getY());
 		 System.out.println("You clicked "  + this.point);
-		 findPoint(this.point); //now take this point and go do stuff with it
+		 targetPoint = findPoint(this.point); //now take this point and go do stuff with it
 		 this.repaint();
 
 	  }
@@ -479,8 +487,15 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g.setColor(Color.RED);
 			g2d.drawString("PLAYER 2, select a target square on PLAYER 2's board.", 540, 495);
 
-			if (hit){
+			//display target square
+			if (checkedMove){
+				g.setColor(Color.YELLOW);
+				g.fillRect((int)targetPoint.x,(int)targetPoint.y,45,45);
+			}
+
+			if (hit && fired){
 				 g2d.drawString("You hit a ship!", 30, 17);
+				 hit = false;
 			}
 		}
 		else if (myGame.moveCount%2!=0 && myGame.moveCount>2){ // 1st player
@@ -489,9 +504,15 @@ public void drawGrid(Graphics g, int startX, int startY){
 			drawGrid(g,520,25);
 			g.setColor(Color.GREEN);
 			g2d.drawString("PLAYER 1, select a target square on PLAYER 2's board.", 30, 495);
-			
-			if (hit){
+
+			if (checkedMove){
+				g.setColor(Color.YELLOW);
+				g.fillRect((int)targetPoint.x,(int)targetPoint.y,45,45);
+			}
+
+			if (hit && fired){
 				 g2d.drawString("You hit a ship!", 30, 17);
+				 hit = false;
 			}
 		}
 
