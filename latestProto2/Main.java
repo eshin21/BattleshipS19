@@ -484,7 +484,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 			if (onePlayerMode){
 				g.setColor(Color.BLACK);
 				g.fillRect(25,25,1000,470);
-				//randomly fill ships in
+				g2d.drawString("PLAYER 2 IS PLACING THEIR SHIPS...",400,300);
+				//randomly fill in ships
 			}
 			else{
 				g.setColor(Color.BLACK);
