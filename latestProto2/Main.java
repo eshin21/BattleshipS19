@@ -207,7 +207,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 					if (getMyGame().moveCount%2==0){
 						System.out.println("testing player b's move");
 						isPlayerA = false;
-						getMyGame().hitShip(cornerPoint,isPlayerA);
+						hit = getMyGame().hitShip(cornerPoint,isPlayerA);
+						checkedMove = true;
 					}
 				}
 			}
@@ -324,7 +325,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 						            myGame.armada_B.removeLast();
 						            repaint();
 						        }
-						}
+						 }
+
 						else if (b.type.equals("F I R E !")){
 								fired = true;
 						}
@@ -342,6 +344,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 @Override
 	 public void mouseClicked(MouseEvent e) {
 		checkedMove = false;
+		fired = false;
 
 	  if(e.getButton() == 1){
 		 this.point = new Pair(e.getX(), e.getY());
