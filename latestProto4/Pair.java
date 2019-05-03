@@ -11,13 +11,6 @@ public class Pair{
 
     }
 
-    public void flipX(){
-        x = -x;
-    }
-
-    public void flipY(){
-        y = -y;
-    }
 
     public String toString() {
 
@@ -85,11 +78,6 @@ public class Pair{
 
         }
 
-        public String inGrid(Pair p) {
-            
-            return "A";
-            
-        }
         
         public boolean equals(Pair p) {
             
@@ -98,10 +86,6 @@ public class Pair{
             else
                 return false;
          
-                        
-            
-            
-            
         }
 
         

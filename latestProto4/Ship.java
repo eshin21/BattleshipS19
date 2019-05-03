@@ -3,19 +3,20 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.awt.Graphics2D;
+import java.util.Random;
 
 /////////////////////////////
 // Enumerates ship.
 ////////////////////////////
 
 public class Ship{
-    String type;
-    Pair position; //locked position of anchor point from which we draw the ship's rectangle
-    int xdim; 
-    int ydim;
-    int health;
-    Color color;
-    String player; //denotes which player this ship belongs to, "A" or "B"
+    public String type;
+    public Pair position; //locked position of anchor point from which we draw the ship's rectangle
+    public int xdim; 
+    public int ydim;
+    public int health;
+    public Color color;
+    public String player; //denotes which player this ship belongs to, "A" or "B"
     
     public Ship(String type, Pair p, int xdim, int ydim, Color color, String player){
         this.type = type;
@@ -112,8 +113,34 @@ public class Ship{
         
     }
         
-            
+      
+    public static void placeCPU(Graphics g, Main m) {
         
+      
+        System.out.println("Placing CPU ships...don't peek!");
+        Random rand = new Random();
+        
+        int xrand1 = rand.nextInt(450) + 520; //min must be 520, max must be 970
+        int yrand1 = rand.nextInt(450) + 25; //min must be 25, max must be 475
+        Pair point1 = new Pair(xrand1, yrand1);
+        Pair corner1 = m.findPoint(point1);
+        
+        int xrand2 = rand.nextInt(450) + 520; //min must be 520, max must be 970
+        int yrand2 = rand.nextInt(450) + 25; //min must be 25, max must be 475
+        Pair point2 = new Pair(xrand2, yrand2);
+        Pair corner2 = m.findPoint(point2);
+        
+        while(corner1.equals(corner2))
+            corner2 = new Pair(rand.nextInt(450) + 520, rand.nextInt(450) + 25);
+        
+        Ship scout = new Ship("Scout", corner1, 3*45, 45, Color.cyan, "CPU");
+        Ship frigate = new Ship("Frigate", corner2, 45, 4*45, Color.cyan, "CPU");
+
+        Main.getMyGame().armada_CPU.add(scout);
+        Main.getMyGame().armada_CPU.add(frigate);
+
+        
+    }
 
         
     public boolean isOOB(Pair p) {
@@ -144,22 +171,8 @@ public class Ship{
     }
         
 
-    public Ship checkEdge(Pair p, Main m) { 
-        
-        if(p.y + this.ydim <= 475 && p.x + this.xdim <= 475 && p.x - this.xdim>=25-45 ||  p.y + this.ydim <= 475 && p.x + this.xdim <= 975 && p.x - this.xdim >=520-45) {       
-           return this; 
-        }
-        
-        
-        else{
-            return measureOver(p);
-        }
-        
-        
-        
-    }
     
-    public Ship measureOver(Pair p) { //if Ship is OOB, remake Ship
+    private Ship measureOver(Pair p) { //if Ship is OOB, remake Ship
 
         int excess  = 0;
         Ship toReturn = new Ship(this.type, p, this.xdim, this.ydim, this.color, this.player);
@@ -204,7 +217,7 @@ public class Ship{
         
     }
     
-    public boolean inGridA() {
+    private boolean inGridA() {
         
         if(this.player.equals("A") && this.position.x + this.xdim <= 475 && this.position.x <= 475 && this.position.x >=25)
             return true;
@@ -215,7 +228,7 @@ public class Ship{
         
     }
     
-    public boolean inGridB() {
+    private boolean inGridB() {
         
         if(!this.player.equals("B")) {
             System.out.println("whoops, this isn't the right grid to check");
@@ -230,7 +243,7 @@ public class Ship{
     }
     
     
-    public boolean equals(Ship r) {
+    private boolean equals(Ship r) {
         
         
         if(this.position.x == r.position.x && this.position.y==r.position.y && this.xdim == r.xdim 
@@ -252,7 +265,7 @@ public class Ship{
         
     }
     
-    public Ship rotate(Main m) { //rotate clockwise 90 deg
+   public Ship rotate(Main m) { //rotate clockwise 90 deg
         
         Pair adjPoint = new Pair(this.position.x - (this.ydim - 45) , this.position.y);
         
@@ -262,21 +275,8 @@ public class Ship{
             
     }
     
-    public boolean needsAdj(Main m) {
-
-        System.out.println("The needsAdj method ran");
-        //if it's in bounds 
-        if(this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 475 && this.position.x - this.xdim>=25-45 ||  this.position.y + this.ydim <= 475 && this.position.x + this.xdim <= 975 && this.position.x - this.xdim >=520-45 ) {
-            return false;
-                    
-        }
-       
-        return true;
-        
-    }
     
-    
-    public boolean isHoriz() {
+    private boolean isHoriz() {
         
         if(this.xdim > this.ydim) {
             return true;
@@ -286,7 +286,7 @@ public class Ship{
     
     }
     
-    public ArrayList<Pair> givePoints(){ //give me the key corners comprising this ship
+    private ArrayList<Pair> givePoints(){ //give me the key corners comprising this ship
         
         ArrayList<Pair> corners = new ArrayList<Pair>();
         int slength=0;
@@ -316,7 +316,7 @@ public class Ship{
     }
     
 
-    public boolean isOverlap(Ship s) {
+    private boolean isOverlap(Ship s) {
         
         System.out.println("ISOVERLAP: I'm checking overlaps");
         
@@ -365,7 +365,7 @@ public class Ship{
         
     }
     
-    public boolean alreadyPlacedA() {
+    private boolean alreadyPlacedA() {
         
         for(Ship s:Main.getMyGame().armada_A) {
             if(this.type.equals(s.type)) {
@@ -378,7 +378,7 @@ public class Ship{
         
     }
 
-    public boolean alreadyPlacedB() {
+    private boolean alreadyPlacedB() {
         
         for(Ship s:Main.getMyGame().armada_B) {
             if(this.type.equals(s.type)) {
@@ -502,7 +502,10 @@ public void shiftRight() {
     }
     
     
+    
     }
+
+    
     
 }
 

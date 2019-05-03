@@ -10,7 +10,7 @@ public class Scout extends Weapon{
 		foundShip = false;
 	}
 
-	public void foundShip(boolean flyover){
+	private void foundShip(boolean flyover){
 		if (flyover){
 			foundShip = true;
 		}
