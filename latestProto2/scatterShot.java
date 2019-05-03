@@ -17,6 +17,8 @@ public class scatterShot extends Weapon{
 	public void adjustRange(xRange,yRange){
 		this.xRange = xRange;
 		this.yRange = yRange;
+
+		this.randomizeShots();
 	}
 
 	private void randomizeShots(){
