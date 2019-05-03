@@ -27,6 +27,9 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 
 	public static shipButton[][] myShipButtonsArray = shipButton.makeShipButtons();
 	public static Button[] gameButtons = Button.makePlayButtons();
+	public static weaponButton[][] weaponButtons = weaponButton.makeWeaponButtons();
+	public static Weapon[] weapons_A;
+	public static Weapon[] weapons_B;
 	private static Game myGame = new Game();
 	public boolean quit = false;
 
@@ -35,6 +38,8 @@ public class Main extends JPanel implements MouseListener, KeyListener{
 	public int indexB = -1;
 	public Ship currentShipA;
 	public Ship currentShipB;
+	public static Weapon currentWeapon;
+	public static boolean choseWeapon;
 	public static boolean onePlayerMode = false;
 	public static boolean isPlayerA = false;
 	public static boolean checkedMove = false;
@@ -136,12 +141,9 @@ public void drawGrid(Graphics g, int startX, int startY){
 			}
 
 			for(shipButton s: myShipButtonsArray[0]) { //draw buttons for Player A ships
-
 				g.setColor(Color.RED);
 				g.fillRect(s.x, s.y, s.xdim, s.ydim);
 				g.setColor(Color.WHITE);
-
-
 
 				Graphics2D g2d = (Graphics2D) g;
 				g2d.setFont(new Font("Courier", Font.BOLD, 13));
@@ -156,7 +158,6 @@ public void drawGrid(Graphics g, int startX, int startY){
 			}
 
 			for(shipButton s: myShipButtonsArray[1]) { //draw buttons for Player B ships
-
 				g.setColor(Color.GREEN);
 				g.fillRect(s.x, s.y, s.xdim, s.ydim);
 				g.setColor(Color.WHITE);
@@ -175,11 +176,8 @@ public void drawGrid(Graphics g, int startX, int startY){
 
 			}
 
-
 			for(Button b : gameButtons) {
-
-
-				g.setColor(Color.YELLOW);
+				g.setColor(Color.CYAN);
 				g.fillRect(b.x, b.y, b.xdim,  b.ydim);
 				g.setColor(Color.BLACK);
 				if (b.type == "One-Player Mode"){
@@ -191,7 +189,37 @@ public void drawGrid(Graphics g, int startX, int startY){
 				}
 			}
 
+			for (weaponButton wb : weaponButtons[0]){ // player 1's buttons
+				if (wb.weapon == currentWeapon){
+					g.setColor(Color.ORANGE);
+					g.fillRect(wb.x, wb.y, wb.xdim, wb.ydim);
+				}
+				else{
+					g.setColor(Color.RED);
+					g.fillRect(wb.x, wb.y, wb.xdim, wb.ydim);
+				}
 
+				g.setColor(Color.BLACK);
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.setFont(new Font("Courier", Font.BOLD, 13));
+				g2d.drawString(wb.type, wb.x+4, wb.y+18);
+			}
+
+			for (weaponButton wb : weaponButtons[1]){ // player 1's buttons
+				if (wb.weapon == currentWeapon){
+					g.setColor(Color.YELLOW);
+					g.fillRect(wb.x, wb.y, wb.xdim, wb.ydim);
+				}
+				else{
+					g.setColor(Color.GREEN);
+					g.fillRect(wb.x, wb.y, wb.xdim, wb.ydim);
+				}
+
+				g.setColor(Color.BLACK);
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.setFont(new Font("Courier", Font.BOLD, 13));
+				g2d.drawString(wb.type, wb.x+4, wb.y+18);
+			}
 
 		}
 
@@ -206,31 +234,30 @@ public void drawGrid(Graphics g, int startX, int startY){
 				cornerPoint = point.findPointA(GridA);
 				if (getMyGame().moveCount>2){ //2nd player
 					if (getMyGame().moveCount%2==0){
-						System.out.println("testing player b's move");
-						isPlayerA = false;
-						hit = getMyGame().hitShip(cornerPoint,isPlayerA);
-						checkedMove = true;
+						if (choseWeapon){
+							isPlayerA = false;
+							hit = getMyGame().hitShip(cornerPoint,isPlayerA,currentWeapon);
+							checkedMove = true;
+						}
 					}
 				}
 			}
 			else if(x>=520 && y<=475) { ///if click was in Grid B, call findPointB
 				cornerPoint = point.findPointB(GridB);
 				if (getMyGame().moveCount>2){
-					System.out.println("testing player a's move");
-					isPlayerA = true;
-					hit = getMyGame().hitShip(cornerPoint,isPlayerA);
-					checkedMove = true;
+					if (choseWeapon){
+						isPlayerA = true;
+						hit = getMyGame().hitShip(cornerPoint,isPlayerA,currentWeapon);
+						checkedMove = true;
+					}
 				}
 			}
 
 			if(x >= 25 && y<=580 && y>=550) { //check whether point falls in row of ship buttons
-			    String type = null;
+			  String type = null;
 				for (shipButton s: myShipButtonsArray[0]) { // buttons for Player A ships
-
 					if (s.inButton(point)) {
-
-
-					    type = s.type;
+					  type = s.type;
 						Ship shipAdd = new Ship(type, point, 45, s.length*45, Color.RED, "A");
 						this.currentShip = shipAdd;
 						this.currentShipA = shipAdd;
@@ -246,7 +273,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 				}
 			}
 
-                System.out.print("You've selected a " + type + " ship");
+      System.out.print("You've selected a " + type + " ship");
 
 
 		}
@@ -334,6 +361,25 @@ public void drawGrid(Graphics g, int startX, int startY){
 						else if (b.type.equals("F I R E !")){
 								fired = true;
 						}
+					}
+				}
+			}
+
+			else if (x >= 25 && x<= 1024 && y>=600 && y<=800){ // SHIP BUTTONS
+				for (weaponButton wb: weaponButtons[0]) { // buttons for Player A weapons
+					System.out.println(wb);
+					if (wb.inButton(point)) {
+						this.currentWeapon = wb.weapon;
+						choseWeapon = true;
+						System.out.println("weapon: " + currentWeapon);
+					}
+				}
+
+				for (weaponButton wb: weaponButtons[1]) { // buttons for Player A weapons
+					if (wb.inButton(point)) {
+						this.currentWeapon = wb.weapon;
+						choseWeapon = true;
+						System.out.println("weapon: " + currentWeapon);
 					}
 				}
 			}
@@ -485,7 +531,7 @@ public void drawGrid(Graphics g, int startX, int startY){
 				g.setColor(Color.BLACK);
 				g.fillRect(25,25,1000,470);
 				g2d.drawString("PLAYER 2 IS PLACING THEIR SHIPS...",400,300);
-				//randomly fill in ships
+				//randomly fill in ships!!!
 			}
 			else{
 				g.setColor(Color.BLACK);
@@ -512,12 +558,16 @@ public void drawGrid(Graphics g, int startX, int startY){
 				g.fillRect(25,25,470,470);
 				drawGrid(g,25,25);
 				g.setColor(Color.RED);
-				g2d.drawString("PLAYER 2, select a target square on PLAYER 2's board.", 540, 495);
+				g2d.drawString("PLAYER 2, choose your weapon, then select a target square on PLAYER 2's board.", 540, 495);
 
 				//display target square
 				if (checkedMove){
 					g.setColor(Color.YELLOW);
-					g.fillRect((int)targetPoint.x+5,(int)targetPoint.y+5,40,40);
+					g2d.drawString("Please select a weapon first!", 50, 17);
+					if (choseWeapon){
+						g.setColor(Color.YELLOW);
+						g.fillRect((int)targetPoint.x+5,(int)targetPoint.y+5,40,40);
+					}
 				}
 
 				if (hit && fired){
@@ -534,9 +584,9 @@ public void drawGrid(Graphics g, int startX, int startY){
 			g.fillRect(520,25,470,470);
 			drawGrid(g,520,25);
 			g.setColor(Color.GREEN);
-			g2d.drawString("PLAYER 1, select a target square on PLAYER 2's board.", 30, 495);
+			g2d.drawString("PLAYER 1, choose your weapon, then select a target square on PLAYER 2's board.", 30, 495);
 
-			if (checkedMove){
+			if (checkedMove && choseWeapon){
 				g.setColor(Color.YELLOW);
 				g.fillRect((int)targetPoint.x+5,(int)targetPoint.y+5,40,40);
 			}

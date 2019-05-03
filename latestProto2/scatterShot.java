@@ -2,17 +2,15 @@ import java.util.Random;
 
 public class scatterShot extends Weapon{
 	public int shots;
-	public Pair xRange;
-	public Pair yRange;
-	public Pair[] shotGrid;
 	Random randm = new Random();
 
 	public scatterShot(){
 		this.type = "scatterShot";
 		this.damage = 10;
+		this.cooldown = 3;
 		this.shots = randm.nextInt(6);
-		shotGrid[] = new Pair[this.shots];
 	}
+<<<<<<< HEAD
 
 	public void adjustRange(xRange,yRange){
 		this.xRange = xRange;
@@ -29,4 +27,6 @@ public class scatterShot extends Weapon{
 		}
 	}
 
+=======
+>>>>>>> 3a22f8c0c14b030cf462b2cfcb6c0284bc1744b1
 }
