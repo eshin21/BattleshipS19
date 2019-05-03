@@ -10,7 +10,6 @@ public class scatterShot extends Weapon{
 		this.cooldown = 3;
 		this.shots = randm.nextInt(6);
 	}
-<<<<<<< HEAD
 
 	public void adjustRange(xRange,yRange){
 		this.xRange = xRange;
@@ -27,6 +26,4 @@ public class scatterShot extends Weapon{
 		}
 	}
 
-=======
->>>>>>> 3a22f8c0c14b030cf462b2cfcb6c0284bc1744b1
 }
