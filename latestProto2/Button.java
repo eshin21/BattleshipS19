@@ -19,14 +19,15 @@ public class Button{
 
     public static Button[] makePlayButtons() {
 
-        Button[] toReturn = new Button[6];
+        Button[] toReturn = new Button[7];
 
         toReturn[0] = new Button("Erase",  240, 600, 95, 50);
         toReturn[1] = new Button("Next Turn", 340, 600, 95, 50);
         toReturn[2] = new Button("Reset A", 440, 600, 95, 50);
         toReturn[3] = new Button("Reset B", 540, 600, 95, 50);
-        toReturn[4] = new Button( "Move", 360, 660, 95, 50);
-        toReturn[5] = new Button("F I R E !",540, 660, 95, 50);
+        toReturn[4] = new Button( "Move", 340, 660, 95, 50);
+        toReturn[5] = new Button("F I R E !", 440, 660, 95, 50);
+				toReturn[6] = new Button("One-Player Mode",240,660,95,50);
 
         return toReturn;
 
@@ -45,6 +46,6 @@ public class Button{
             return false;
     }
 
-    
-    
+
+
 }

@@ -27,16 +27,16 @@ public class Game{
         this.playerB_status = 0;
     }
 
+		public void play() {
+			if (this.gameOver){
+					System.out.println("Game over!");
+					if(playerA_status > 0)
+							System.out.print(" Player one wins!");
+					else if (playerB_status > 0)
+							System.out.print(" Player two wins!");
+			}
+	}
 
-    public void play() {
-        if (this.gameOver){
-            System.out.println("Game over!");
-            if(playerA_status > 0)
-                System.out.print(" Player one wins!");
-            else if (playerB_status > 0)
-                System.out.print(" Player two wins!");
-        }
-    }
 
 
     public boolean gameOverStatus() {
@@ -57,7 +57,7 @@ public class Game{
 
     }
 
-		public boolean hitShip (Pair p, boolean isPlayerA){
+		public boolean hitShip (Pair p, boolean isPlayerA, Weapon weapon){
 			// if else to seperate armada a and break
 			System.out.println(p.x + "," + p.y);
 			if (isPlayerA){ // 1st player
@@ -66,6 +66,10 @@ public class Game{
 	   			if (p.x >= s.position.x && p.x <= (s.position.x+s.xdim)){ // within x bounds
 						if (p.y >= s.position.y && p.y <= (s.position.y+s.ydim)){ // within y
 							System.out.println("You hit player A's" + s.type);
+
+							//affect ship status
+							s.shipSunk((int)weapon.damage);
+
 							return true;
 						}
 					}
@@ -77,12 +81,15 @@ public class Game{
 					if (p.x >= s.position.x && p.x <= (s.position.x+s.xdim)){
 						if (p.y >= s.position.y && p.y <= (s.position.y+s.ydim)){
 							System.out.println("You hit player B's" + s.type);
+
+							//affect ship status
+							s.shipSunk((int)weapon.damage);
+
 							return true;
 						}
 					}
 				}
 			}
-			System.out.print("Miss!");
 		  return false;
 		}
 
