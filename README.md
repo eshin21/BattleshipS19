@@ -1,5 +1,7 @@
 # BattleshipS19
 
+#### by Enoch Shin and Claire Cho
+
 A twist on the classic boardgame Battleship, written entirely in Java for an introductory-level computer science course.
 
 Some of its features:
